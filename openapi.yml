@@ -1,0 +1,1864 @@
+openapi: 3.0.3
+x-stoplight:
+  id: 7dzejnj0dkxia
+info:
+  title: SimplyQ API
+  version: '1.0'
+  description: ''
+  license:
+    name: MIT
+  contact:
+    name: SimplyQ Team
+    email: support@simplyq.io
+    url: 'https://www.simplyq.io/contact'
+  x-logo:
+    url: 'https://uploads-ssl.webflow.com/629e11c04abbacb89ac5a3ab/62a08bdfb92e78ddc02d6dfc_simplyq.svg'
+    altText: SimplyQ API References
+servers:
+  - url: 'https://api.simplyq.io'
+    description: production
+tags:
+  - name: Application
+    description: Applications represent your logical aggregates such as Accounts, Users, etc.
+  - name: Endpoint
+    description: Endpoints are associated with an Application and hold the routing rules. Each application can have multiple endpoints and every message sent to the application will be routed to all endpoints - depending on the routing rules at each endpoint the message may not be attempted for a particular endpoint.
+  - name: Event
+    description: An event is an envelope that contains metadata and the event data - payload - you wish to send to endpoint(s).
+  - name: DeliveryAttempt
+    description: Delivery attempts are logs of our system attempting to deliver an Event to an Endpoint.
+x-tagGroups:
+  - name: General
+    tags:
+      - Application
+      - Endpoint
+      - Event
+      - DeliveryAttempt
+paths:
+  /v1/application:
+    get:
+      summary: List Applications
+      tags:
+        - Application
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    data:
+                      - uid: unique-app-identifier
+                        name: My first application
+                        rateLimit: 1000
+                        id: app_1srOrx2ZWZBpBUvZwXKQmoEYga2
+                        createdAt: '2019-08-24T14:15:22Z'
+                        updatedAt: '2019-08-24T14:15:22Z'
+                    done: true
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Application'
+                  done:
+                    type: boolean
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      operationId: get-v1-list-application
+      description: List all of the environment's application resources.
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/ending_before'
+        - $ref: '#/components/parameters/starting_after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/after'
+      security:
+        - HTTPBearer: []
+    parameters: []
+    post:
+      summary: Create Application
+      operationId: post-v1-application
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+              examples:
+                example-1:
+                  value:
+                    uid: the-pizza-club
+                    name: The Pizza Club
+                    rateLimit: 1000
+                    id: app_xxx
+                    createdAt: '2019-08-24T14:15:22Z'
+                    updatedAt: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '422':
+          $ref: '#/components/responses/422-Validation-Error'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      description: Create a new application.
+      tags:
+        - Application
+      requestBody:
+        $ref: '#/components/requestBodies/Application'
+  '/v1/application/{app_id}':
+    get:
+      summary: Retrieve Application
+      tags:
+        - Application
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+              examples:
+                example-1:
+                  value:
+                    uid: the-pizza-club
+                    name: The Pizza Club
+                    rateLimit: 1000
+                    id: app_xxx
+                    createdAt: '2019-08-24T14:15:22Z'
+                    updatedAt: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+      operationId: get-v1-application
+      description: Get an application resource.
+      parameters: []
+      security:
+        - HTTPBearer: []
+    parameters:
+      - $ref: '#/components/parameters/app_id'
+    put:
+      summary: Update Application
+      operationId: put-v1-application-app_id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '409':
+          $ref: '#/components/responses/409-Conflict'
+        '422':
+          $ref: '#/components/responses/422-Validation-Error'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      description: Update an application resource.
+      requestBody:
+        $ref: '#/components/requestBodies/Application'
+      tags:
+        - Application
+      security:
+        - HTTPBearer: []
+    delete:
+      summary: Delete Application
+      operationId: delete-v1-application-app_id
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      description: Delete an application resource.
+      tags:
+        - Application
+      security:
+        - HTTPBearer: []
+  '/v1/application/{app_id}/endpoint':
+    get:
+      summary: List Endpoints
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    data:
+                      - uid: unique-app-identifier
+                        name: My first application
+                        rateLimit: 1000
+                        id: app_1srOrx2ZWZBpBUvZwXKQmoEYga2
+                        createdAt: '2019-08-24T14:15:22Z'
+                        updatedAt: '2019-08-24T14:15:22Z'
+                    done: true
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Endpoint'
+              examples:
+                example-1:
+                  value:
+                    data:
+                      - uid: the-pizza-club-core
+                        url: 'https://example.com/webhook/'
+                        version: v1
+                        description: Example description of the endpoint
+                        filterTypes:
+                          - account.created
+                        topics:
+                          - a_b_test_carrot_toppping
+                        disabled: false
+                        rateLimit: 1000
+                        createdAt: '2019-08-24T14:15:22Z'
+                        updatedAt: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      operationId: get-v1-list-endpoint
+      description: List all of the application's endpoint resources.
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/ending_before'
+        - $ref: '#/components/parameters/starting_after'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/after'
+      tags:
+        - Endpoint
+      security:
+        - HTTPBearer: []
+    parameters:
+      - $ref: '#/components/parameters/app_id'
+    post:
+      summary: Create Endpoint
+      operationId: post-v1-create-endpoint
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Endpoint'
+              examples:
+                example-1:
+                  value:
+                    uid: the-pizza-club-core
+                    url: 'https://example.com/webhook/'
+                    version: v1
+                    description: Example description of the endpoint
+                    filterTypes:
+                      - account.created
+                    topics:
+                      - a_b_test_carrot_toppping
+                    disabled: false
+                    rateLimit: 1000
+                    createdAt: '2019-08-24T14:15:22Z'
+                    updatedAt: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '422':
+          $ref: '#/components/responses/422-Validation-Error'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      description: Create a new endpoint resource.
+      requestBody:
+        $ref: '#/components/requestBodies/Endpoint'
+      tags:
+        - Endpoint
+      security:
+        - HTTPBearer: []
+  '/v1/application/{app_id}/endpoint/{endpoint_id}':
+    get:
+      summary: Retrieve Endpoint
+      tags:
+        - Endpoint
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Endpoint-Read'
+              examples:
+                example-1:
+                  value:
+                    uid: the-pizza-club-core
+                    url: 'https://example.com/webhook/'
+                    version: v1
+                    description: Example description of the endpoint
+                    filterTypes:
+                      - account.created
+                    topics:
+                      - a_b_test_carrot_toppping
+                    disabled: false
+                    rateLimit: 1000
+                    createdAt: '2019-08-24T14:15:22Z'
+                    updatedAt: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+      operationId: get-v1-endpoint
+      description: Get an endpoint resource.
+      parameters: []
+      security:
+        - HTTPBearer: []
+    parameters:
+      - $ref: '#/components/parameters/app_id'
+      - $ref: '#/components/parameters/endpoint_id'
+    put:
+      summary: Update Endpoint
+      operationId: put-v1-endpoint
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Endpoint-Read'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '422':
+          $ref: '#/components/responses/422-Validation-Error'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      description: Update an endpoint resource.
+      requestBody:
+        $ref: '#/components/requestBodies/Endpoint'
+      tags:
+        - Endpoint
+      security:
+        - HTTPBearer: []
+    delete:
+      summary: Delete Endpoint
+      operationId: delete-v1-endpoint
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      description: Delete an endpoint resource.
+      tags:
+        - Endpoint
+      security:
+        - HTTPBearer: []
+  '/v1/application/{app_id}/endpoint/{endpoint_id}/recover':
+    parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+          example: app_xxx
+        description: The application's UID
+      - name: endpoint_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ep_xxxxx
+        description: The endpoint's UID
+    post:
+      summary: Recover Endpoint
+      operationId: post-v1-application-app_id-endpoint-endpoint_id-recover
+      responses:
+        '200':
+          description: OK
+      description: Send faild events to the endpoint.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                since:
+                  type: string
+                  format: date-time
+                  description: RFC3339 timestamp
+      tags:
+        - Endpoint
+      security:
+        - HTTPBearer: []
+  '/v1/application/{app_id}/endpoint/{endpoint_id}/secret':
+    parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+          example: app_xxx
+        description: The application's UID
+      - name: endpoint_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ep_xxxxx
+        description: The endpoint's UID
+    post:
+      summary: Rotate Endpoint Secret
+      operationId: post-v1-application-app_id-endpoint-endpoint_id-secret
+      responses:
+        '204':
+          description: No Content
+      description: Rotate the endpoint secret
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+      tags:
+        - Endpoint
+      security:
+        - HTTPBearer: []
+    get:
+      summary: Retrieve Endpoint Secret
+      operationId: get-v1-application-app_id-endpoint-endpoint_id-recover---copy
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      tags:
+        - Endpoint
+      security:
+        - HTTPBearer: []
+  '/v1/application/{app_id}/event':
+    get:
+      summary: List Events
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    data:
+                      - uid: unique-app-identifier
+                        name: My first application
+                        rateLimit: 1000
+                        id: app_1srOrx2ZWZBpBUvZwXKQmoEYga2
+                        createdAt: '2019-08-24T14:15:22Z'
+                        updatedAt: '2019-08-24T14:15:22Z'
+                    done: true
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+              examples:
+                Example:
+                  value:
+                    data:
+                      - eventType: account.created
+                        eventId: 8537f7d761-c4356b38a2f20-3184a4490c
+                        topics:
+                          - a_b_test_carrot_toppping
+                        payload:
+                          trialing: true
+                          referral: false
+                          id: 1003
+                          user: alice@example.com
+                        payloadRetentionPeriod: 15
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      operationId: get-v1-list-events
+      description: List all of the application's event resources.
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/event_types'
+        - $ref: '#/components/parameters/topics'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/after'
+      tags:
+        - Event
+      security:
+        - HTTPBearer: []
+    parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+          example: app_xxx
+        description: The application's UID
+    post:
+      summary: Create Event
+      operationId: post-v1-create-event
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+              examples:
+                example-1:
+                  value:
+                    eventType: account.created
+                    uid: 8537f7d761-c4356b38a2f20-3184a4490c
+                    topics:
+                      - a_b_test_carrot_toppping
+                    payload:
+                      trialing: true
+                      referral: false
+                      id: 1003
+                      user: alice@example.com
+                    retentionPeriod: 15
+                    created_at: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '422':
+          $ref: '#/components/responses/422-Validation-Error'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      description: Create a new endpoint resource.
+      requestBody:
+        $ref: '#/components/requestBodies/Event'
+      tags:
+        - Event
+      security:
+        - HTTPBearer: []
+  '/v1/application/{app_id}/event/{event_id}':
+    get:
+      summary: Retrieve Event
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+              examples:
+                example-1:
+                  value:
+                    eventType: account.created
+                    uid: 8537f7d761-c4356b38a2f20-3184a4490c
+                    topics:
+                      - a_b_test_carrot_toppping
+                    payload:
+                      trialing: true
+                      referral: false
+                      id: 1003
+                      user: alice@example.com
+                    retentionPeriod: 15
+                    created_at: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      operationId: get-v1-event
+      description: Get an event resource.
+      parameters: []
+      tags:
+        - Event
+      security:
+        - HTTPBearer: []
+    parameters:
+      - $ref: '#/components/parameters/app_id'
+      - $ref: '#/components/parameters/event_id'
+  '/v1/application/{app_id}/endpoint/{endpoint_id}/event':
+    get:
+      summary: List Attempted Events for Endpoint
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+                  has_more:
+                    type: boolean
+              examples:
+                example-1:
+                  value:
+                    eventType: account.created
+                    uid: 8537f7d761-c4356b38a2f20-3184a4490c
+                    topics:
+                      - a_b_test_carrot_toppping
+                    payload:
+                      trialing: true
+                      referral: false
+                      id: 1003
+                      user: alice@example.com
+                    retentionPeriod: 15
+                    created_at: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      operationId: get-v1-endpoint-events
+      description: List events for a given Endpoint resoource.
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/event_types'
+        - $ref: '#/components/parameters/topics'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/starting_after'
+        - $ref: '#/components/parameters/ending_before'
+      tags:
+        - Event
+      security:
+        - HTTPBearer: []
+    parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+          example: app_xxx
+        description: The application's UID
+      - name: endpoint_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ep_xxxxx
+        description: The endpoint's UID
+  '/v1/application/{app_id}/endpoint/{endpoint_id}/delivery_attempt':
+    get:
+      summary: List Delivery Attempts for Endpoint
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeliveryAttempt'
+                  has_more:
+                    type: boolean
+              examples:
+                example-1:
+                  value:
+                    eventType: account.created
+                    uid: 8537f7d761-c4356b38a2f20-3184a4490c
+                    topics:
+                      - a_b_test_carrot_toppping
+                    payload:
+                      trialing: true
+                      referral: false
+                      id: 1003
+                      user: alice@example.com
+                    retentionPeriod: 15
+                    created_at: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      operationId: get-v1-endpoint-da
+      description: List delivery attempts for a given Endpoint resoource.
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/event_types'
+        - $ref: '#/components/parameters/topics'
+        - $ref: '#/components/parameters/response_status_code'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/starting_after'
+        - $ref: '#/components/parameters/ending_before'
+      tags:
+        - DeliveryAttempt
+      security:
+        - HTTPBearer: []
+    parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+          example: app_xxx
+        description: The application's UID
+      - schema:
+          type: string
+        name: endpoint_id
+        in: path
+        required: true
+  '/v1/application/{app_id}/event/{event_id}/delivery_attempt':
+    get:
+      summary: List Delivery Attempts for Event
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeliveryAttempt'
+                  has_more:
+                    type: boolean
+              examples:
+                example-1:
+                  value:
+                    eventType: account.created
+                    uid: 8537f7d761-c4356b38a2f20-3184a4490c
+                    topics:
+                      - a_b_test_carrot_toppping
+                    payload:
+                      trialing: true
+                      referral: false
+                      id: 1003
+                      user: alice@example.com
+                    retentionPeriod: 15
+                    created_at: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      operationId: get-v1-event-da
+      description: List delivery attempts for a given Endpoint resoource.
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/status'
+        - $ref: '#/components/parameters/response_status_code'
+        - $ref: '#/components/parameters/before'
+        - $ref: '#/components/parameters/after'
+        - $ref: '#/components/parameters/starting_after'
+        - $ref: '#/components/parameters/ending_before'
+      tags:
+        - DeliveryAttempt
+      security:
+        - HTTPBearer: []
+    parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+          example: app_xxx
+        description: The application's UID
+      - schema:
+          type: string
+        name: event_id
+        in: path
+        required: true
+  '/v1/application/{app_id}/event/{event_id}/delivery_attempt/{delivery_attempt_id}/':
+    get:
+      summary: Retrieve Delivery Attempt
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryAttempt'
+              examples:
+                example-1:
+                  value:
+                    eventType: account.created
+                    uid: 8537f7d761-c4356b38a2f20-3184a4490c
+                    topics:
+                      - a_b_test_carrot_toppping
+                    payload:
+                      trialing: true
+                      referral: false
+                      id: 1003
+                      user: alice@example.com
+                    retentionPeriod: 15
+                    created_at: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      operationId: get-v1-da
+      description: List delivery attempts for a given Endpoint resoource.
+      parameters: []
+      tags:
+        - DeliveryAttempt
+      security:
+        - HTTPBearer: []
+    parameters:
+      - $ref: '#/components/parameters/app_id'
+      - $ref: '#/components/parameters/event_id'
+      - schema:
+          type: string
+        name: delivery_attempt_id
+        in: path
+        required: true
+  '/v1/application/{app_id}/event/{event_id}/endpoint':
+    get:
+      summary: List Endpoint for an Event
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Endpoint-Read'
+                  has_more:
+                    type: boolean
+              examples:
+                example-1:
+                  value:
+                    eventType: account.created
+                    uid: 8537f7d761-c4356b38a2f20-3184a4490c
+                    topics:
+                      - a_b_test_carrot_toppping
+                    payload:
+                      trialing: true
+                      referral: false
+                      id: 1003
+                      user: alice@example.com
+                    retentionPeriod: 15
+                    created_at: '2019-08-24T14:15:22Z'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      operationId: get-v1-event-endpoints
+      description: List endpoints to which a given Event is delivered to.
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/starting_after'
+        - $ref: '#/components/parameters/ending_before'
+      tags:
+        - DeliveryAttempt
+        - Endpoint
+      security:
+        - HTTPBearer: []
+    parameters:
+      - name: app_id
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+          example: app_xxx
+        description: The application's UID
+      - name: event_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The event's ID
+  '/v1/application/{app_id}/endpoint/{endpoint_id}/event/{event_id}':
+    parameters:
+      - $ref: '#/components/parameters/app_id'
+      - $ref: '#/components/parameters/event_id'
+      - $ref: '#/components/parameters/endpoint_id'
+    post:
+      summary: Retry Event
+      operationId: post-v1-endpoint-event-retry
+      responses:
+        '202':
+          description: Accepted
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-Not-Found'
+        '429':
+          $ref: '#/components/responses/429-Too-Many-Requests'
+      description: Enqueue event for delivery to the specified Endpoint regardless of its current delivery status.
+      tags:
+        - Event
+      x-internal: true
+      security:
+        - HTTPBearer: []
+components:
+  schemas:
+    RetryStrategy:
+      type: object
+      x-examples:
+        example-1:
+          type: base_exponential_backoff_with_deadline
+          max_retries: 0
+          retry_delay: 0
+          deadline: 0
+      properties:
+        type:
+          type: string
+          enum:
+            - base_exponential_backoff_with_deadline
+            - exponential_backoff
+            - exponential_backoff_with_deadline
+            - fixed_wait
+            - fixed_wait_with_deadline
+          example: base_exponential_backoff_with_deadline
+          description: |-
+            The retry strategy type identifies what algorithm will be used:
+
+            | Enum                                   | Description                                                                                                                 |
+            | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+            | base_exponential_backoff_with_deadline | Default retry algorithm with up to 6 retries over 8 hours                                                                   |
+            | exponential_backoff                    | Exponential square backoff algo with capped backoff `min(2^retryCount, maxBackoff)`                                         |
+            | exponential_backoff_with_deadline      | Exponential square backoff algo with capped backoff, which respects the *max_retries* and *deadline*, whichever comes first |
+            | fixed_wait                             | Retries at fixed interval respecting the *max_retries*                                                                      |
+            | fixed_wait_with_deadline               | Retries at fixed interval respecting the *max_retries* and *deadline*, whichever comes first                                |
+
+            NOTE: Based on the selected algorithm certain fields will be ignored.
+        max_retries:
+          type: integer
+        retry_delay:
+          type: integer
+        deadline:
+          type: integer
+    Application:
+      type: object
+      x-examples:
+        example-1:
+          uid: unique-app-identifier
+          name: My first application
+          rateLimit: 1000
+          id: app_1srOrx2ZWZBpBUvZwXKQmoEYga2
+          createdAt: '2019-08-24T14:15:22Z'
+          updatedAt: '2019-08-24T14:15:22Z'
+      description: 'Aggregate resource that encapsulates your customer units e.g. accounts, users and etc.'
+      properties:
+        uid:
+          type: string
+          description: Unique identifier for the application
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+        name:
+          type: string
+        rate_limit:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        retry_strategy:
+          $ref: '#/components/schemas/RetryStrategy'
+      required:
+        - uid
+        - name
+    Headers:
+      title: Headers
+      x-stoplight:
+        id: o93zjiw361jzg
+      type: object
+      properties:
+        headers:
+          type: object
+          maxProperties: 10
+          minProperties: 1
+        sensitive:
+          type: object
+          minProperties: 1
+          maxProperties: 10
+    Endpoint:
+      type: object
+      x-examples:
+        example-1:
+          uid: the-pizza-club-core
+          url: 'https://example.com/webhook/'
+          version: '1'
+          description: Example endpoint name
+          filterTypes:
+            - account.created
+            - account.subscribed
+          topics:
+            - vegan_pizza
+            - a_b_test_carrot_toppping
+          disabled: false
+          rateLimit: 1000
+          createdAt: '2019-08-24T14:15:22Z'
+          updatedAt: '2019-08-24T14:15:22Z'
+      x-tags:
+        - Endpoint
+      properties:
+        uid:
+          type: string
+          example: the-pizza-club-core
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+          description: Unique identifier of the endpoint inside the application.
+        url:
+          type: string
+          example: 'https://example.com/webhook/'
+          format: uri
+        version:
+          type: string
+          example: v1
+        description:
+          type: string
+          example: Example description of the endpoint
+        filter_types:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            example: account.created
+        topics:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 5
+          items:
+            type: string
+            example: a_b_test_carrot_toppping
+        active:
+          type: boolean
+          default: false
+        rate_limit:
+          type: integer
+          minimum: 1
+          example: 1000
+        headers:
+          $ref: '#/components/schemas/Headers'
+        secret:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - url
+        - version
+    Headers-Read:
+      title: Headers
+      x-stoplight:
+        id: muuyorcltpkhk
+      type: object
+      properties:
+        headers:
+          type: object
+          maxProperties: 10
+          minProperties: 1
+          readOnly: true
+        sensitive:
+          type: boolean
+          description: If there are any entries it returns `true`.
+          readOnly: true
+    Endpoint-Read:
+      type: object
+      x-stoplight:
+        id: ri7ij5clwwfvu
+      x-examples:
+        example-1:
+          uid: the-pizza-club-core
+          url: 'https://example.com/webhook/'
+          version: '1'
+          description: Example endpoint name
+          filterTypes:
+            - account.created
+            - account.subscribed
+          topics:
+            - vegan_pizza
+            - a_b_test_carrot_toppping
+          disabled: false
+          rateLimit: 1000
+          createdAt: '2019-08-24T14:15:22Z'
+          updatedAt: '2019-08-24T14:15:22Z'
+      x-tags:
+        - Endpoint
+      properties:
+        uid:
+          type: string
+          example: the-pizza-club-core
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+          description: Unique identifier of the endpoint inside the application.
+        url:
+          type: string
+          example: 'https://example.com/webhook/'
+          format: uri
+        version:
+          type: string
+          example: v1
+        description:
+          type: string
+          example: Example description of the endpoint
+        filter_types:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            example: account.created
+        topics:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 5
+          items:
+            type: string
+            example: a_b_test_carrot_toppping
+        active:
+          type: boolean
+          default: true
+        rate_limit:
+          type: integer
+          minimum: 1
+          example: 1000
+        headers:
+          $ref: '#/components/schemas/Headers-Read'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - uid
+        - url
+        - version
+    Event:
+      type: object
+      x-examples:
+        example-1:
+          eventType: user.signup
+          eventId: evt_pNZKtWg8Azow
+          topics:
+            - project_123
+            - group_2
+          payload:
+            username: test_user
+            email: test@example.com
+          payloadRetentionPeriod: 90
+      properties:
+        uid:
+          type: string
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+          example: 8537f7d761-c4356b38a2f20-3184a4490c
+        event_type:
+          type: string
+          pattern: '^[a-zA-Z0-9\-_.]+$'
+          minLength: 1
+          maxLength: 255
+          example: account.created
+        topics:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            example: a_b_test_carrot_toppping
+        payload:
+          type: object
+        retention_period:
+          type: integer
+          default: 90
+          example: 15
+          minimum: 5
+          maximum: 90
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+    DeliveryAttempt:
+      type: object
+      x-examples:
+        example-1:
+          id: atmpt_1srOrx2ZWZBpBUvZwXKQmoEYga2
+          msgId: msg_1srOrx2ZWZBpBUvZwXKQmoEYga2
+          endpointId: ep_1srOrx2ZWZBpBUvZwXKQmoEYga2
+          response: '{}'
+          responseStatusCode: 200
+          timestamp: '2019-08-24T14:15:22Z'
+          status: 0
+          triggerType: 0
+      x-tags:
+        - DeliveryAttempt
+      properties:
+        id:
+          type: string
+        event_id:
+          type: string
+        endpoint_id:
+          type: string
+        response:
+          type: string
+          description: The response of the endpoint when a delivery attempt was made or null if not yet attempted.
+          nullable: true
+        response_status_code:
+          type: integer
+          description: The response code of the endpoint when the event delivery was attempted.
+        status:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+          example: 1
+          description: |-
+            The delivery status of the event to the endpoint:
+
+            |Enum|Status|
+            |----|------|
+            | 0 | Success |
+            | 1 | Pending |
+            | 2 | Sending |
+            | 3 | Fail |
+          readOnly: true
+        trigger_type:
+          type: integer
+          description: |-
+            The tigger of the delivery attempt:
+
+            |Enum|Status|
+            |----|------|
+            | 0 | System |
+            | 1 | Manual |
+          example: 0
+          enum:
+            - 0
+            - 1
+          readOnly: true
+        attempted_at:
+          type: string
+          format: date-time
+          description: 'This is the timestamp of when the delivery attempt was made to the endpoint. In case it has not yet been attempted and the status of the delivery attempt is **pending**, then the value of the timestamp will be **null**.'
+          nullable: true
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: bmp_2dNkUE1XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  responses:
+    401-Unauthorized:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+              error:
+                type: string
+            x-examples:
+              example-1:
+                code: string
+                error: string
+          examples:
+            example-1:
+              value:
+                code: string
+                error: string
+    403-Forbidden:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              example-1:
+                code: string
+                detail: string
+            properties:
+              code:
+                type: string
+              error:
+                type: string
+          examples:
+            example-1:
+              value:
+                code: string
+                error: string
+    404-Not-Found:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+              error:
+                type: string
+            x-examples:
+              example-1:
+                code: string
+                error: string
+          examples:
+            example-1:
+              value:
+                code: string
+                error: string
+    409-Conflict:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+              error:
+                type: string
+            x-examples:
+              example-1:
+                code: string
+                error: string
+          examples:
+            example-1:
+              value:
+                code: string
+                error: string
+    422-Validation-Error:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                    error:
+                      type: string
+            x-examples:
+              example-1:
+                errors:
+                  - field: a
+                    error: Must be a string with xxx
+          examples:
+            example-1:
+              value:
+                errors:
+                  - field: string
+                    error: string
+    429-Too-Many-Requests:
+      description: Example response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: string
+              error:
+                type: string
+            x-examples:
+              example-1:
+                code: string
+                error: string
+          examples:
+            example-1:
+              value:
+                code: string
+                error: string
+  parameters:
+    app_id:
+      name: app_id
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '^[a-zA-Z0-9\-_.]+$'
+        minLength: 1
+        maxLength: 255
+        example: app_xxx
+      description: The application's UID
+    event_id:
+      name: event_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The event's ID
+    limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 50
+        minimum: 1
+        maximum: 150
+      description: The number of results returned
+    status:
+      name: status
+      in: query
+      required: false
+      schema:
+        type: integer
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+      description: The delivery status of an Event
+    before:
+      name: before
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date-time
+      description: Results to return that occurred UP TO the timestamp provided.
+    after:
+      name: after
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date-time
+      description: Results to return that occurred AFTER the timestamp provided.
+    endpoint_id:
+      name: endpoint_id
+      in: path
+      required: true
+      schema:
+        type: string
+        example: ep_xxxxx
+      description: The endpoint's UID
+    response_status_code:
+      name: response_status_code
+      in: query
+      schema:
+        type: integer
+        enum:
+          - 0
+          - 200
+          - 300
+          - 400
+          - 500
+    topics:
+      name: topics
+      in: query
+      required: false
+      schema:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+          example: a_b_test_carrot_toppping
+      style: form
+    event_types:
+      name: event_types
+      in: query
+      required: false
+      schema:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+          example: account.created
+    starting_after:
+      name: starting_after
+      in: query
+      required: false
+      schema:
+        type: string
+      description: 'A cursor for use in pagination. starting_after is a resource ID that defines your place in the list. For instance, if you make a list request and receive 100 resource objects, ending with resource_obj_n, your subsequent call can include starting_after=resource_obj_n in order to fetch the next page of the list.'
+    ending_before:
+      name: ending_before
+      in: query
+      required: false
+      schema:
+        type: string
+      description: 'A cursor for use in pagination. `ending_before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with `resource_obj_0`, your subsequent call can include `ending_before=resource_obj_0` in order to fetch the previous page of the list.'
+  requestBodies:
+    Application:
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              example-1:
+                uid: the-pizza-club
+                name: The Pizza Club
+                rateLimit: 1000
+            properties:
+              uid:
+                type: string
+                pattern: '^[a-zA-Z0-9\-_.]+$'
+                minLength: 1
+                maxLength: 255
+                example: the-pizza-club
+              name:
+                type: string
+                example: The Pizza Club
+              rate_limit:
+                type: integer
+                example: 1000
+              retry_strategy:
+                $ref: '#/components/schemas/RetryStrategy'
+            required:
+              - name
+          examples:
+            example-1:
+              value:
+                uid: the-pizza-club
+                name: The Pizza Club
+                rate_limit: 1000
+    Application-Update:
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              example-1:
+                uid: the-pizza-club
+                name: The Pizza Club
+                rateLimit: 1000
+            properties:
+              uid:
+                type: string
+                pattern: '^[a-zA-Z0-9\-_.]+$'
+                minLength: 1
+                maxLength: 255
+                example: the-pizza-club
+              name:
+                type: string
+                example: The Pizza Club
+              rate_limit:
+                type: integer
+                example: 1000
+            required:
+              - name
+          examples:
+            example-1:
+              value:
+                uid: the-pizza-club
+                name: The Pizza Club
+                rate_limit: 1000
+    Endpoint:
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              example-1:
+                uid: the-pizza-club-core
+                url: 'https://example.com/webhook/'
+                version: '1'
+                description: Example endpoint name
+                filterTypes:
+                  - account.created
+                  - account.subscribed
+                topics:
+                  - vegan_pizza
+                  - a_b_test_carrot_toppping
+                disabled: false
+                rateLimit: 1000
+            properties:
+              uid:
+                type: string
+                pattern: '^[a-zA-Z0-9\-_.]+$'
+                minLength: 1
+                maxLength: 255
+                example: ep_xxxxx
+              url:
+                type: string
+                format: uri
+                example: 'https://example.com/webhook/'
+                maxLength: 2048
+                minLength: 1
+              version:
+                type: string
+                example: v1
+                pattern: '^[a-zA-Z0-9\-_.]+$'
+              description:
+                type: string
+                example: An example endpoint name
+              filter_types:
+                type: array
+                items:
+                  type: string
+                  pattern: '^[a-zA-Z0-9\-_.]+$'
+                  example: account.created
+              topics:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  example: a_b_test_carrot_toppping
+                  pattern: '^[a-zA-Z0-9\-_.]+$'
+              rate_limit:
+                type: integer
+                minimum: 1
+                example: 1000
+              headers:
+                $ref: '#/components/schemas/Headers'
+              secret:
+                type: string
+                pattern: '^whsec_[a-zA-Z0-9]{64}$'
+                example: whsec_vepZNLxI3tJ2tWEIDAU5BWPJq3yYxm4mV4R65pNLpFk6dTvApVfz7yfTc2grpDC2
+              active:
+                type: boolean
+                default: true
+            required:
+              - url
+          examples:
+            example-1:
+              value:
+                uid: ep_xxxxx
+                url: 'https://example.com/webhook/'
+                version: v1
+                description: An example endpoint name
+                filter_types:
+                  - account.created
+                topics:
+                  - a_b_test_carrot_toppping
+                rate_limit: 1000
+                secret: whsec_vepZNLxI3tJ2tWEIDAU5BWPJq3yYxm4mV4R65pNLpFk6dTvApVfz7yfTc2grpDC2
+                active: true
+    Endpoint-Update:
+      content:
+        application/json:
+          schema:
+            type: object
+            x-examples:
+              example-1:
+                uid: the-pizza-club-core
+                url: 'https://example.com/webhook/'
+                version: '1'
+                description: Example endpoint name
+                filterTypes:
+                  - account.created
+                  - account.subscribed
+                topics:
+                  - vegan_pizza
+                  - a_b_test_carrot_toppping
+                disabled: false
+                rateLimit: 1000
+            properties:
+              uid:
+                type: string
+                pattern: '^[a-zA-Z0-9\-_.]+$'
+                minLength: 1
+                maxLength: 255
+                example: ep_xxxxx
+              url:
+                type: string
+                format: uri
+                example: 'https://example.com/webhook/'
+                maxLength: 2048
+                minLength: 1
+              version:
+                type: string
+                example: v1
+                pattern: '^[a-zA-Z0-9\-_.]+$'
+              description:
+                type: string
+                example: An example endpoint name
+              filter_types:
+                type: array
+                items:
+                  type: string
+                  pattern: '^[a-zA-Z0-9\-_.]+$'
+                  example: account.created
+              topics:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  example: a_b_test_carrot_toppping
+                  pattern: '^[a-zA-Z0-9\-_.]+$'
+              rate_limit:
+                type: integer
+                minimum: 1
+                example: 1000
+              headers:
+                $ref: '#/components/schemas/Headers'
+              secret:
+                type: string
+                pattern: '^whsec_[a-zA-Z0-9]{64}$'
+                example: whsec_vepZNLxI3tJ2tWEIDAU5BWPJq3yYxm4mV4R65pNLpFk6dTvApVfz7yfTc2grpDC2
+              active:
+                type: boolean
+                default: true
+            required:
+              - url
+          examples:
+            example-1:
+              value:
+                uid: ep_xxxxx
+                url: 'https://example.com/webhook/'
+                version: v1
+                description: An example endpoint name
+                filter_types:
+                  - account.created
+                topics:
+                  - a_b_test_carrot_toppping
+                rate_limit: 1000
+                secret: whsec_vepZNLxI3tJ2tWEIDAU5BWPJq3yYxm4mV4R65pNLpFk6dTvApVfz7yfTc2grpDC2
+                active: true
+    Event:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              event_type:
+                type: string
+                pattern: '^[a-zA-Z0-9\-_.]+$'
+                maxLength: 255
+                example: account.created
+                minLength: 1
+              uid:
+                type: string
+                minLength: 1
+                maxLength: 255
+                pattern: '^[a-zA-Z0-9\-_.]+$'
+                example: 8537f7d761c-4356b38a2f20-3184a4490c
+              topics:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  example: a_b_test_carrot_toppping
+                  pattern: '^[a-zA-Z0-9\-_.]+$'
+                  minLength: 1
+                  maxLength: 255
+              payload:
+                type: object
+              retention_period:
+                type: integer
+          examples:
+            example-1:
+              value:
+                event_type: account.created
+                uid: 8537f7d761c-4356b38a2f20-3184a4490c
+                topics:
+                  - a_b_test_carrot_toppping
+                payload:
+                  trialing: true
+                  referral: false
+                  id: 1003
+                  user: alice@example.com
+                retention_period: 0
+security:
+  - HTTPBearer: []
+x-internal: true
+x-logo:
+  url: 'https://uploads-ssl.webflow.com/629e11c04abbacb89ac5a3ab/62a08bdfb92e78ddc02d6dfc_simplyq.svg'
+  altText: SimplyQ API References
