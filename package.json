@@ -1,0 +1,21 @@
+{
+  "name": "api-reference",
+  "version": "1.0.0",
+  "description": "SimplyQ's API Reference documentation",
+  "main": "index.js",
+  "repository": "https://github.com/simplyqio/api-reference",
+  "author": "(DXTimer <ivan@simplyq.io>)",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.2",
+    "@redocly/cli": "^1.0.0-beta.108",
+    "redoc-cli": "^0.13.19"
+  },
+  "scripts": {
+    "start": "redocly preview-docs --use-community-edition",
+    "bundle": "redocly bundle --output bundle.yml",
+    "bundle-json": "redocly bundle --output bundle.json --format json",
+    "build": "yarn bundle && redoc-cli build --output index.html bundle.yml"
+  }
+}
