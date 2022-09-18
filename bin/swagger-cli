@@ -1,3 +1,0 @@
-#!/bin/bash
-
-docker run --rm -it -v ${PWD}/ruby_config.json:/local/ruby_config.json -v ${PWD}/bundle.yml:/local/bundle.yml -v ${PWD}/dist:/local/out swaggerapi/swagger-codegen-cli-v3 "$@"

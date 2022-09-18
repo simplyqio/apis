@@ -1,0 +1,19 @@
+apis:
+  simplyq@v1:
+    root: ./openapi.yml
+features.openapi:
+  htmlTemplate: ./redocly/templates/index.tpl.html
+  hideDownloadButton: true
+  downloadDefinitionUrl: ''
+  schemaExpansionLevel: 2
+  defaultSampleLanguage: 'curl'
+  generateCodeSamples:
+    languages:
+      - lang: curl
+      - lang: Python
+      - lang: Ruby
+      - lang: JavaScript
+  theme:
+    logo:
+      gutter: 24px 2px
+

@@ -1,0 +1,69 @@
+#!/bin/bash
+
+language=$1
+
+if [ -z "$language" ]; then
+  echo "Usage: openapitools-cli <language>"
+  exit 1
+fi
+
+# docker run --rm -it -v ${PWD}/${language}/openapitools.json:/local/openapitools.json -v ${PWD}/openapi.yml:/local/openapi.yml -v ${PWD}/dist:/local/out openapitools/openapi-generator-cli "$@"
+
+function run_cli() {
+  docker run --rm -it -v ${PWD}/${language}/openapitools.json:/local/openapitools.json -v ${PWD}/openapi.yml:/local/openapi.yml -v ${PWD}/clients:/local/out openapitools/openapi-generator-cli "$@"
+}
+
+# Case statement to check which language to generate
+case $language in
+"typescript")
+  run_cli generate -i /local/openapi.yml -g typescript-fetch -o /local/out/typescript
+  ;;
+"typescript-axios")
+  run_cli generate -i /local/openapi.yml -g typescript-axios -o /local/out/typescript-axios
+  ;;
+"typescript-node")
+  run_cli generate -i /local/openapi.yml -g typescript-node -o /local/out/typescript-node
+  ;;
+"typescript-angular")
+  run_cli generate -i /local/openapi.yml -g typescript-angular -o /local/out/typescript-angular
+  ;;
+"typescript-axios")
+  run_cli generate -i /local/openapi.yml -g typescript-axios -o /local/out/typescript-axios
+  ;;
+"java")
+  run_cli generate -i /local/openapi.yml -g java -o /local/out/java
+  ;;
+"python")
+  run_cli generate -i /local/openapi.yml -g python -o /local/out/python
+  ;;
+"ruby")
+  run_cli generate -i /local/openapi.yml -g ruby -o /local/out/ruby
+  ;;
+"go")
+  run_cli generate -i /local/openapi.yml -g go -o /local/out/go
+  ;;
+"kotlin")
+  run_cli generate -i /local/openapi.yml -g kotlin -o /local/out/kotlin
+  ;;
+"swift")
+  run_cli generate -i /local/openapi.yml -g swift4 -o /local/out/swift
+  ;;
+"csharp")
+  run_cli generate -i /local/openapi.yml -g csharp -o /local/out/csharp
+  ;;
+"csharp-dotnet2")
+  run_cli generate -i /local/openapi.yml -g csharp-dotnet2 -o /local/out/csharp-dotnet2
+  ;;
+"csharp-dotnetcore")
+  run_cli generate -i /local/openapi.yml -g csharp-dotnetcore -o /local/out/csharp-dotnetcore
+  ;;
+"csharp-nancyfx")
+  run_cli generate -i /local/openapi.yml -g csharp-nancyfx -o /local/out/csharp-nancyfx
+  ;;
+"csharp-netcore")
+  run_cli generate -i /local/open
+  ;;
+*)
+  echo -n "unknown"
+  ;;
+esac

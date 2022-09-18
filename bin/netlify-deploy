@@ -1,0 +1,13 @@
+#!/bin/bash
+
+export $(egrep -v '^#' .env | xargs)
+
+mkdir _site
+cp index.html _site/index.html
+
+zip -r -m build.zip _site
+
+curl -H "Content-Type: application/zip" \
+  -H "Authorization: Bearer $NETLIFY_API_TOKEN" \
+  --data-binary @build.zip \
+  https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys
