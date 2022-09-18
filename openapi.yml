@@ -17,7 +17,7 @@ servers:
     description: production
 tags:
   - name: Application
-    description: Applications represent your logical aggregates such as Accounts, Users, etc.
+    description: 'Applications represent your logical aggregates such as Accounts, Users, etc.'
   - name: Endpoint
     description: Endpoints are associated with an Application and hold the routing rules. Each application can have multiple endpoints and every message sent to the application will be routed to all endpoints - depending on the routing rules at each endpoint the message may not be attempted for a particular endpoint.
   - name: Event
@@ -67,7 +67,7 @@ paths:
           $ref: '#/components/responses/403-Forbidden'
         '429':
           $ref: '#/components/responses/429-Too-Many-Requests'
-      operationId: get-v1-list-application
+      operationId: GetApplications
       description: List all of the environment's application resources.
       parameters:
         - $ref: '#/components/parameters/limit'
@@ -80,7 +80,7 @@ paths:
     parameters: []
     post:
       summary: Create Application
-      operationId: post-v1-application
+      operationId: PostApplication
       responses:
         '201':
           description: Created
@@ -137,7 +137,7 @@ paths:
           $ref: '#/components/responses/403-Forbidden'
         '404':
           $ref: '#/components/responses/404-Not-Found'
-      operationId: get-v1-application
+      operationId: GetApplication
       description: Get an application resource.
       parameters: []
       security:
@@ -146,7 +146,7 @@ paths:
       - $ref: '#/components/parameters/app_id'
     put:
       summary: Update Application
-      operationId: put-v1-application-app_id
+      operationId: PutApplication
       responses:
         '200':
           description: OK
@@ -175,7 +175,7 @@ paths:
         - HTTPBearer: []
     delete:
       summary: Delete Application
-      operationId: delete-v1-application-app_id
+      operationId: DeleteApplication
       responses:
         '204':
           description: No Content
@@ -239,7 +239,7 @@ paths:
           $ref: '#/components/responses/403-Forbidden'
         '429':
           $ref: '#/components/responses/429-Too-Many-Requests'
-      operationId: get-v1-list-endpoint
+      operationId: GetEndpoints
       description: List all of the application's endpoint resources.
       parameters:
         - $ref: '#/components/parameters/limit'
@@ -255,7 +255,7 @@ paths:
       - $ref: '#/components/parameters/app_id'
     post:
       summary: Create Endpoint
-      operationId: post-v1-create-endpoint
+      operationId: PostEndpoint
       responses:
         '201':
           description: Created
@@ -326,7 +326,7 @@ paths:
           $ref: '#/components/responses/403-Forbidden'
         '404':
           $ref: '#/components/responses/404-Not-Found'
-      operationId: get-v1-endpoint
+      operationId: GetEndpoint
       description: Get an endpoint resource.
       parameters: []
       security:
@@ -336,7 +336,7 @@ paths:
       - $ref: '#/components/parameters/endpoint_id'
     put:
       summary: Update Endpoint
-      operationId: put-v1-endpoint
+      operationId: PutEndpoint
       responses:
         '200':
           description: OK
@@ -363,7 +363,7 @@ paths:
         - HTTPBearer: []
     delete:
       summary: Delete Endpoint
-      operationId: delete-v1-endpoint
+      operationId: DeleteEndpoint
       responses:
         '204':
           description: No Content
@@ -401,7 +401,7 @@ paths:
         description: The endpoint's UID
     post:
       summary: Recover Endpoint
-      operationId: post-v1-application-app_id-endpoint-endpoint_id-recover
+      operationId: PostEndpointRecover
       responses:
         '200':
           description: OK
@@ -441,7 +441,7 @@ paths:
         description: The endpoint's UID
     post:
       summary: Rotate Endpoint Secret
-      operationId: post-v1-application-app_id-endpoint-endpoint_id-secret
+      operationId: PostEndpointSecretRotate
       responses:
         '204':
           description: No Content
@@ -460,7 +460,7 @@ paths:
         - HTTPBearer: []
     get:
       summary: Retrieve Endpoint Secret
-      operationId: get-v1-application-app_id-endpoint-endpoint_id-recover---copy
+      operationId: GetEndpointSecret
       responses:
         '200':
           description: OK
@@ -528,7 +528,7 @@ paths:
           $ref: '#/components/responses/403-Forbidden'
         '429':
           $ref: '#/components/responses/429-Too-Many-Requests'
-      operationId: get-v1-list-events
+      operationId: GetEvents
       description: List all of the application's event resources.
       parameters:
         - $ref: '#/components/parameters/limit'
@@ -553,7 +553,7 @@ paths:
         description: The application's UID
     post:
       summary: Create Event
-      operationId: post-v1-create-event
+      operationId: PostEvent
       responses:
         '201':
           description: Created
@@ -622,7 +622,7 @@ paths:
           $ref: '#/components/responses/404-Not-Found'
         '429':
           $ref: '#/components/responses/429-Too-Many-Requests'
-      operationId: get-v1-event
+      operationId: GetEvent
       description: Get an event resource.
       parameters: []
       tags:
@@ -671,8 +671,8 @@ paths:
           $ref: '#/components/responses/404-Not-Found'
         '429':
           $ref: '#/components/responses/429-Too-Many-Requests'
-      operationId: get-v1-endpoint-events
-      description: List events for a given Endpoint resoource.
+      operationId: GetAttemptedEndpoints
+      description: List events for a given Endpoint resource.
       parameters:
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/status'
@@ -743,8 +743,8 @@ paths:
           $ref: '#/components/responses/404-Not-Found'
         '429':
           $ref: '#/components/responses/429-Too-Many-Requests'
-      operationId: get-v1-endpoint-da
-      description: List delivery attempts for a given Endpoint resoource.
+      operationId: GetEndpointDeliveryAttempts
+      description: List delivery attempts for a given Endpoint resource.
       parameters:
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/status'
@@ -814,8 +814,8 @@ paths:
           $ref: '#/components/responses/404-Not-Found'
         '429':
           $ref: '#/components/responses/429-Too-Many-Requests'
-      operationId: get-v1-event-da
-      description: List delivery attempts for a given Endpoint resoource.
+      operationId: GetEventDeliveryAttempts
+      description: List delivery attempts for a given Endpoint resource.
       parameters:
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/status'
@@ -876,8 +876,8 @@ paths:
           $ref: '#/components/responses/404-Not-Found'
         '429':
           $ref: '#/components/responses/429-Too-Many-Requests'
-      operationId: get-v1-da
-      description: List delivery attempts for a given Endpoint resoource.
+      operationId: GetDeliveryAttempt
+      description: List delivery attempts for a given Endpoint resource.
       parameters: []
       tags:
         - DeliveryAttempt
@@ -930,7 +930,7 @@ paths:
           $ref: '#/components/responses/404-Not-Found'
         '429':
           $ref: '#/components/responses/429-Too-Many-Requests'
-      operationId: get-v1-event-endpoints
+      operationId: GetEventEndpoints
       description: List endpoints to which a given Event is delivered to.
       parameters:
         - $ref: '#/components/parameters/limit'
@@ -965,7 +965,7 @@ paths:
       - $ref: '#/components/parameters/endpoint_id'
     post:
       summary: Retry Event
-      operationId: post-v1-endpoint-event-retry
+      operationId: PostEventRetry
       responses:
         '202':
           description: Accepted
@@ -1548,6 +1548,7 @@ components:
           - 300
           - 400
           - 500
+      description: Filter by the delivery attempts response HTTP status code
     topics:
       name: topics
       in: query
@@ -1559,6 +1560,7 @@ components:
           type: string
           example: a_b_test_carrot_toppping
       style: form
+      description: Filter by event topics
     event_types:
       name: event_types
       in: query
@@ -1617,119 +1619,7 @@ components:
                 uid: the-pizza-club
                 name: The Pizza Club
                 rate_limit: 1000
-    Application-Update:
-      content:
-        application/json:
-          schema:
-            type: object
-            x-examples:
-              example-1:
-                uid: the-pizza-club
-                name: The Pizza Club
-                rateLimit: 1000
-            properties:
-              uid:
-                type: string
-                pattern: '^[a-zA-Z0-9\-_.]+$'
-                minLength: 1
-                maxLength: 255
-                example: the-pizza-club
-              name:
-                type: string
-                example: The Pizza Club
-              rate_limit:
-                type: integer
-                example: 1000
-            required:
-              - name
-          examples:
-            example-1:
-              value:
-                uid: the-pizza-club
-                name: The Pizza Club
-                rate_limit: 1000
     Endpoint:
-      content:
-        application/json:
-          schema:
-            type: object
-            x-examples:
-              example-1:
-                uid: the-pizza-club-core
-                url: 'https://example.com/webhook/'
-                version: '1'
-                description: Example endpoint name
-                filterTypes:
-                  - account.created
-                  - account.subscribed
-                topics:
-                  - vegan_pizza
-                  - a_b_test_carrot_toppping
-                disabled: false
-                rateLimit: 1000
-            properties:
-              uid:
-                type: string
-                pattern: '^[a-zA-Z0-9\-_.]+$'
-                minLength: 1
-                maxLength: 255
-                example: ep_xxxxx
-              url:
-                type: string
-                format: uri
-                example: 'https://example.com/webhook/'
-                maxLength: 2048
-                minLength: 1
-              version:
-                type: string
-                example: v1
-                pattern: '^[a-zA-Z0-9\-_.]+$'
-              description:
-                type: string
-                example: An example endpoint name
-              filter_types:
-                type: array
-                items:
-                  type: string
-                  pattern: '^[a-zA-Z0-9\-_.]+$'
-                  example: account.created
-              topics:
-                type: array
-                uniqueItems: true
-                items:
-                  type: string
-                  example: a_b_test_carrot_toppping
-                  pattern: '^[a-zA-Z0-9\-_.]+$'
-              rate_limit:
-                type: integer
-                minimum: 1
-                example: 1000
-              headers:
-                $ref: '#/components/schemas/Headers'
-              secret:
-                type: string
-                pattern: '^whsec_[a-zA-Z0-9]{64}$'
-                example: whsec_vepZNLxI3tJ2tWEIDAU5BWPJq3yYxm4mV4R65pNLpFk6dTvApVfz7yfTc2grpDC2
-              active:
-                type: boolean
-                default: true
-            required:
-              - url
-          examples:
-            example-1:
-              value:
-                uid: ep_xxxxx
-                url: 'https://example.com/webhook/'
-                version: v1
-                description: An example endpoint name
-                filter_types:
-                  - account.created
-                topics:
-                  - a_b_test_carrot_toppping
-                rate_limit: 1000
-                secret: whsec_vepZNLxI3tJ2tWEIDAU5BWPJq3yYxm4mV4R65pNLpFk6dTvApVfz7yfTc2grpDC2
-                active: true
-    Endpoint-Update:
       content:
         application/json:
           schema:
