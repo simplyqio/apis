@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: bundler
+    directory: "/ruby"
+    schedule:
+      interval: daily
+    commit-message:
+      prefix: "Ruby"
+      include: "scope"
+    open-pull-requests-limit: 10
+    labels:
+      - "ruby"
+      - "dependencies"
