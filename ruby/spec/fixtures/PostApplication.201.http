@@ -1,0 +1,8 @@
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+X-Ratelimit-Limit: 50
+X-Ratelimit-Remaining: 49
+Date: Sat, 29 Oct 2022 03:20:14 GMT
+Content-Length: 249
+
+{"uid":"fixture-1","name":"Fixture app","rate_limit":0,"retry_strategy":{"type":"base_exponential_backoff_with_deadline","max_retries":0,"retry_delay":0,"deadline":0},"created_at":"2022-10-29T03:20:14+00:00","updated_at":"2022-10-29T03:20:14+00:00"}
