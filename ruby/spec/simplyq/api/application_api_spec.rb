@@ -87,6 +87,7 @@ RSpec.describe Simplyq::API::ApplicationAPI do
   describe "#create" do
     it "returns the application" do
       stub_request(:post, %r{/v1/application})
+        .with(body: hash_including({ "name" => "Fixture app", "uid" => "fixture-1" }))
         .to_return(http_fixture_for("PostApplication", status: 201))
 
       application = api.create(name: "Fixture app", uid: "fixture-1")
@@ -101,6 +102,7 @@ RSpec.describe Simplyq::API::ApplicationAPI do
     context "when the application already exists" do
       it "raises an error" do
         stub_request(:post, %r{/v1/application})
+          .with(body: hash_including({ "name" => "Fixture app", "uid" => "fixture-1" }))
           .to_return(http_fixture_for("PostApplication", status: 422))
 
         expect do
@@ -121,6 +123,7 @@ RSpec.describe Simplyq::API::ApplicationAPI do
   describe "#update" do
     it "returns the application" do
       stub_request(:put, %r{/v1/application/fixture-1})
+        .with(body: hash_including({ "name" => "Fixture app (Updated)" }))
         .to_return(http_fixture_for("PutApplication", status: 200))
 
       application = api.update("fixture-1", name: "Fixture app (Updated)")
@@ -133,6 +136,16 @@ RSpec.describe Simplyq::API::ApplicationAPI do
     context "when updating the retry strategy" do
       it "returns the application" do
         stub_request(:put, %r{/v1/application/fixture-1})
+          .with(body: hash_including(
+            {
+              "retry_strategy" => hash_including(
+                {
+                  "type" => "fixed_wait",
+                  "max_retries" => 10
+                }
+              )
+            }
+          ))
           .to_return(http_fixture_for("PutApplication", status: 200))
 
         application = api.update("fixture-1", retry_strategy: { type: "fixed_wait", max_retries: 10 })
@@ -149,6 +162,7 @@ RSpec.describe Simplyq::API::ApplicationAPI do
     context "when the application does not exist" do
       it "raises an error" do
         stub_request(:put, %r{/v1/application/does-not-exist})
+          .with(body: hash_including({ "name" => "Fixture app" }))
           .to_return(http_fixture_for("PutApplication", status: 404))
 
         expect do

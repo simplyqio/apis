@@ -33,10 +33,10 @@ module Simplyq
         decerialize(data)
       end
 
-      def update(application_id, attributes)
+      def update(application_id, application)
         path = API_PARAM_PATH.gsub("{app_id}", application_id)
 
-        data, status, headers = client.call_api(:put, path, attributes)
+        data, status, headers = client.call_api(:put, path, { body: build_model(application).to_h })
         decerialize(data)
       end
 
