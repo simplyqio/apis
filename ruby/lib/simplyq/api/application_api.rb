@@ -29,7 +29,7 @@ module Simplyq
       end
 
       def create(application)
-        data, status, headers = client.call_api(:post, API_PATH, build_model(application).to_h)
+        data, status, headers = client.call_api(:post, API_PATH, { body: build_model(application).to_h })
         decerialize(data)
       end
 

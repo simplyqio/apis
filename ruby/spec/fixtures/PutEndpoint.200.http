@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+X-Ratelimit-Limit: 50
+X-Ratelimit-Remaining: 49
+Date: Sun, 30 Oct 2022 05:44:07 GMT
+Content-Length: 453
+
+{"uid":"fixture-edp-1","url":"https://webhook.site/1b2d263c-37db-4b09-9512-489afb959b0a/fixture-edp-1","version":"latest","description":"This endpoints was created as part of developing client fixtures","filter_types":["fixture.created","fixture.updated"],"topics":["ruby-client"],"active":true,"rate_limit":101,"headers":{"headers":{"X-CUSTOM":"test"},"sensitive":true},"created_at":"2022-10-29T09:53:59+00:00","updated_at":"2022-10-30T05:44:07+00:00"}

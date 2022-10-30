@@ -1,0 +1,8 @@
+HTTP/1.1 422 Unprocessable Entity
+Content-Type: application/json; charset=utf-8
+X-Ratelimit-Limit: 50
+X-Ratelimit-Remaining: 49
+Date: Sat, 29 Oct 2022 15:02:04 GMT
+Content-Length: 128
+
+{"errors":[{"field":"uid","error":"Endpoint UID already exists in the application"}]}
