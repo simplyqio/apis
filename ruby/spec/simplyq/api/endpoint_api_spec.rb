@@ -142,6 +142,92 @@ RSpec.describe Simplyq::API::EndpointAPI do
     end
   end
 
+  describe "#recover" do
+    it "recovers an endpoint" do
+      time = Time.now.utc.iso8601
+      stub_request(:post, %r{/v1/application/#{application_uid}/endpoint/#{endpoint_uid}/recover})
+        .with(body: hash_including({ "since" => time }))
+        .to_return(http_fixture_for("PostEndpointRecover", status: 202))
+
+      response = api.recover(application_uid, endpoint_uid, since: time)
+
+      expect(response).to be(true)
+    end
+
+    context "when no valid time is provided" do
+      it "raises an ArgumentError" do
+        expect do
+          api.recover(application_uid, endpoint_uid, since: "invalid")
+        end.to raise_error(ArgumentError)
+      end
+    end
+
+    context "when endpoint id does not exist" do
+      it "raises an error" do
+        stub_request(:post, %r{/v1/application/#{application_uid}/endpoint/#{endpoint_uid}/recover})
+          .to_return(http_fixture_for("PostEndpointRecover", status: 404))
+
+        expect do
+          api.recover(application_uid, endpoint_uid, since: Time.now.utc.iso8601)
+        end.to raise_error(Simplyq::InvalidRequestError) do |error|
+          expect(error.message).to eq("Resource not found")
+          expect(error.code).to eq(404)
+        end
+      end
+    end
+  end
+
+  describe "#retrieve_secret" do
+    it "retrieves the endpoint secret" do
+      stub_request(:get, %r{/v1/application/#{application_uid}/endpoint/#{endpoint_uid}/secret})
+        .to_return(http_fixture_for("GetEndpointSecret", status: 200))
+
+      secret = api.retrieve_secret(application_uid, endpoint_uid)
+
+      expect(secret).to eq("enps_W9AVAEsWztO56sl1hNTxHWsJPlJ2nDon")
+    end
+
+    context "when the endpoint does not exist" do
+      it "raises an error" do
+        stub_request(:get, %r{/v1/application/#{application_uid}/endpoint/#{endpoint_uid}/secret})
+          .to_return(http_fixture_for("GetEndpointSecret", status: 404))
+
+        expect do
+          api.retrieve_secret(application_uid, endpoint_uid)
+        end.to raise_error(Simplyq::InvalidRequestError) do |error|
+          expect(error.message).to eq("Resource not found")
+          expect(error.code).to eq(404)
+        end
+      end
+    end
+  end
+
+  describe "#rotate_secret" do
+    it "rotates the endpoint secret" do
+      stub_request(:post, %r{/v1/application/#{application_uid}/endpoint/#{endpoint_uid}/secret})
+        .with(body: { key: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" })
+        .to_return(http_fixture_for("PostEndpointSecretRotate", status: 204))
+
+      result = api.rotate_secret(application_uid, endpoint_uid, secret: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
+      expect(result).to be(true)
+    end
+
+    context "when the endpoint does not exist" do
+      it "raises an error" do
+        stub_request(:post, %r{/v1/application/#{application_uid}/endpoint/#{endpoint_uid}/secret})
+          .to_return(http_fixture_for("PostEndpointSecretRotate", status: 404))
+
+        expect do
+          api.rotate_secret(application_uid, endpoint_uid)
+        end.to raise_error(Simplyq::InvalidRequestError) do |error|
+          expect(error.message).to eq("Resource not found")
+          expect(error.code).to eq(404)
+        end
+      end
+    end
+  end
+
   describe "#build_model" do
     it "builds a model" do
       endpoint = api.build_model({ uid: endpoint_uid, url: "https://example.com/fixture-edp-1" })
@@ -162,6 +248,52 @@ RSpec.describe Simplyq::API::EndpointAPI do
       expect(list.data.first).to be_a(Simplyq::Model::Endpoint)
       expect(list.data.first.uid).to eq("fixture-edp-1")
       expect(list.data.first.url).to eq("https://example.com/fixture-edp-1")
+    end
+  end
+
+  describe "#_to_rfc3339" do
+    it "converts a time to RFC3339" do
+      expect(api._to_rfc3339(Time.utc(2020, 1, 1, 0, 0, 0))).to eq("2020-01-01T00:00:00Z")
+    end
+
+    it "converts a datetime to RFC3339" do
+      expect(api._to_rfc3339(DateTime.new(2020, 1, 1, 0, 0, 0))).to eq("2020-01-01T00:00:00Z")
+    end
+
+    it "converts a string to RFC3339" do
+      expect(api._to_rfc3339("2020-01-01T00:00:00Z")).to eq("2020-01-01T00:00:00Z")
+    end
+
+    context "when timezone is not UTC" do
+      it "converts a time to RFC3339" do
+        expect(api._to_rfc3339(Time.new(2020, 1, 1, 0, 0, 0, "+09:00"))).to eq("2019-12-31T15:00:00Z")
+      end
+
+      it "converts a datetime to RFC3339" do
+        expect(api._to_rfc3339(DateTime.new(2020, 1, 1, 0, 0, 0, "+09:00"))).to eq("2019-12-31T15:00:00Z")
+      end
+
+      it "converts a string to RFC3339" do
+        expect(api._to_rfc3339("2020-01-01T00:00:00+09:00")).to eq("2019-12-31T15:00:00Z")
+      end
+    end
+
+    context "when the value is invalid" do
+      it "raises an error" do
+        expect do
+          api._to_rfc3339("invalid")
+        end.to raise_error(ArgumentError) do |error|
+          expect(error.message).to eq("no time information in \"invalid\"")
+        end
+      end
+
+      it "raises an error when date provided" do
+        expect do
+          api._to_rfc3339(Date.new(2020, 1, 1))
+        end.to raise_error(ArgumentError) do |error|
+          expect(error.message).to eq("Invalid time must be a Time, DateTime, String")
+        end
+      end
     end
   end
 end
