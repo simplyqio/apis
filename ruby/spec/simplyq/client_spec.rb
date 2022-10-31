@@ -223,7 +223,7 @@ RSpec.describe Simplyq::Client do
         proxy = "https://username:password@proxy.example.com:8080"
 
         api = described_class.new(api_key: api_key, base_url: base_url, proxy: proxy)
-        connection = subject.connection
+        connection = api.connection
 
         expect(connection.proxy).to eq(Faraday::ProxyOptions.from(proxy))
       end
