@@ -12,10 +12,12 @@ module Simplyq
       attr_accessor :has_more
 
       attr_accessor :data_type
+      attr_accessor :api_method
+      attr_accessor :list_args
       attr_accessor :filters
       attr_accessor :api
 
-      def initialize(data_type, attributes = {}, api:, filters: {})
+      def initialize(data_type, attributes = {}, api_method:, api:, filters: {}, list_args: [])
         self.data = if attributes.key?(:data)
                       attributes[:data].map do |item|
                         if data_type == Hash
@@ -32,7 +34,11 @@ module Simplyq
 
         self.data_type = data_type
 
+        self.api_method = api_method
+
         self.filters = filters
+
+        self.list_args = list_args
 
         self.api = api
       end
@@ -72,7 +78,7 @@ module Simplyq
 
         query_params = filters.dup.tap { |h| h.delete(:ending_before) }
         query_params[:start_after] = last.uid
-        api.list(query_params)
+        api.send(api_method, *list_args, query_params)
       end
 
       def prev_page
@@ -80,7 +86,7 @@ module Simplyq
 
         query_params = filters.dup.tap { |h| h.delete(:start_after) }
         query_params[:ending_before] = first.uid
-        api.list(query_params)
+        api.send(api_method, *list_args, query_params)
       end
 
       def to_h

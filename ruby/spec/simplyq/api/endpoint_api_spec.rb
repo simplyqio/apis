@@ -69,6 +69,9 @@ RSpec.describe Simplyq::API::EndpointAPI do
           .to_return(http_fixture_for("GetEndpoints", status: 200))
 
         endpoints = api.list(application_uid, limit: 1)
+        endpoints.has_more = true
+
+        endpoints = endpoints.next_page
 
         expect(endpoints).to be_a(Simplyq::Model::List)
         expect(endpoints.first.uid).to eq("fixture-edp-1")
@@ -224,6 +227,42 @@ RSpec.describe Simplyq::API::EndpointAPI do
           expect(error.message).to eq("Resource not found")
           expect(error.code).to eq(404)
         end
+      end
+    end
+  end
+
+  describe "#retrieve_attempted_events" do
+    it "retrieves attempted events" do
+      stub_request(:get, %r{/v1/application/#{application_uid}/endpoint/#{endpoint_uid}/event})
+        .to_return(http_fixture_for("GetAttemptedEndpoints", status: 200))
+
+      events = api.retrieve_attempted_events(application_uid, endpoint_uid)
+
+      expect(events).to be_a(Simplyq::Model::List)
+      expect(events.data).to be_a(Array)
+      expect(events.size).to eq(1)
+      expect(events.first).to be_a(Simplyq::Model::Event)
+      expect(events.first.uid).to eq("evte_2GtKBoeEo99TijMnNH8QLPLeWWX")
+    end
+
+    context "when using pagination" do
+      it "returns a list of events" do
+        stub_request(:get, %r{/v1/application/#{application_uid}/endpoint/#{endpoint_uid}/event})
+          .with(query: { "limit" => "1" })
+          .to_return(http_fixture_for("GetAttemptedEndpoints", status: 200))
+
+        stub_request(:get, %r{/v1/application/#{application_uid}/endpoint/#{endpoint_uid}/event})
+          .with(query: { "start_after" => "evte_2GtKBoeEo99TijMnNH8QLPLeWWX", "limit" => "1" })
+          .to_return(http_fixture_for("GetAttemptedEndpoints", status: 200))
+
+        events = api.retrieve_attempted_events(application_uid, endpoint_uid, limit: 1)
+        events.has_more = true
+
+        events = events.next_page
+
+        expect(events).to be_a(Simplyq::Model::List)
+        expect(events.first).to be_a(Simplyq::Model::Event)
+        expect(events.first.uid).to eq("evte_2GtKBoeEo99TijMnNH8QLPLeWWX")
       end
     end
   end

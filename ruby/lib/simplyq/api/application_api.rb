@@ -63,7 +63,11 @@ module Simplyq
       def decerialize_list(json_data, params: {})
         data = body_to_json(json_data)
 
-        Simplyq::Model::List.from_hash(data, Simplyq::Model::Application, filters: params, api: self)
+        Simplyq::Model::List.new(
+          Simplyq::Model::Application, data,
+          api_method: :list,
+          filters: params, api: self
+        )
       end
 
       def body_to_json(body)

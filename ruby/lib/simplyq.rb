@@ -12,10 +12,12 @@ require "simplyq/configuration"
 require "simplyq/models/list"
 require "simplyq/models/application"
 require "simplyq/models/endpoint"
+require "simplyq/models/event"
 
 # APIs
 require "simplyq/api/application_api"
 require "simplyq/api/endpoint_api"
+require "simplyq/api/event_api"
 
 module Simplyq
 end

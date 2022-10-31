@@ -12,6 +12,7 @@ module Simplyq
       API_PARAM_PATH = "/v1/application/{app_id}/endpoint/{endpoint_id}"
       API_RECOVER_PATH = "/v1/application/{app_id}/endpoint/{endpoint_id}/recover"
       API_SECRET_PATH = "/v1/application/{app_id}/endpoint/{endpoint_id}/secret"
+      API_ATTEMPTED_EVENTS_PATH = "/v1/application/{app_id}/endpoint/{endpoint_id}/event"
 
       # Initializes a new API object.
       #
@@ -32,7 +33,7 @@ module Simplyq
         path = API_PATH.gsub("{app_id}", application_id)
 
         data, status, headers = client.call_api(:get, path, { query_params: params })
-        decerialize_list(data, params: params)
+        decerialize_list(data, params: params, list_args: [application_id])
       end
 
       def create(application_id, endpoint)
@@ -77,6 +78,13 @@ module Simplyq
         status == 204
       end
 
+      def retrieve_attempted_events(application_id, endpoint_id, params = {})
+        path = API_ATTEMPTED_EVENTS_PATH.gsub("{app_id}", application_id).gsub("{endpoint_id}", endpoint_id)
+
+        data, status, headers = client.call_api(:get, path, { query_params: params })
+        decerialize_events_list(data, params: params, list_args: [application_id, endpoint_id])
+      end
+
       def build_model(data)
         return data if data.is_a?(Simplyq::Model::Endpoint)
         raise ArgumentError, "Invalid data must be a Simplyq::Model::Endpoint or Hash" unless data.is_a?(Hash)
@@ -96,10 +104,27 @@ module Simplyq
         data[:key]
       end
 
-      def decerialize_list(json_data, params: {})
+      def decerialize_list(json_data, params: {}, list_args: [])
         data = body_to_json(json_data)
 
-        Simplyq::Model::List.new(Simplyq::Model::Endpoint, data, filters: params, api: self)
+        Simplyq::Model::List.new(
+          Simplyq::Model::Endpoint,
+          data,
+          api_method: :list,
+          list_args: list_args,
+          filters: params, api: self
+        )
+      end
+
+      def decerialize_events_list(json_data, params: {}, list_args: [])
+        data = body_to_json(json_data)
+
+        Simplyq::Model::List.new(
+          Simplyq::Model::Event, data,
+          api_method: :retrieve_attempted_events,
+          list_args: list_args,
+          filters: params, api: self
+        )
       end
 
       def body_to_json(body)
