@@ -13,6 +13,7 @@ module Simplyq
       API_RECOVER_PATH = "/v1/application/{app_id}/endpoint/{endpoint_id}/recover"
       API_SECRET_PATH = "/v1/application/{app_id}/endpoint/{endpoint_id}/secret"
       API_ATTEMPTED_EVENTS_PATH = "/v1/application/{app_id}/endpoint/{endpoint_id}/event"
+      API_DELIVERY_ATTEMPTS_PATH = "/v1/application/{app_id}/endpoint/{endpoint_id}/delivery_attempt"
 
       # Initializes a new API object.
       #
@@ -85,6 +86,13 @@ module Simplyq
         decerialize_events_list(data, params: params, list_args: [application_id, endpoint_id])
       end
 
+      def retrieve_delivery_attempts(application_id, endpoint_id, params = {})
+        path = API_DELIVERY_ATTEMPTS_PATH.gsub("{app_id}", application_id).gsub("{endpoint_id}", endpoint_id)
+
+        data, status, headers = client.call_api(:get, path, { query_params: params })
+        decerialize_attempts_list(data, params: params, list_args: [application_id, endpoint_id])
+      end
+
       def build_model(data)
         return data if data.is_a?(Simplyq::Model::Endpoint)
         raise ArgumentError, "Invalid data must be a Simplyq::Model::Endpoint or Hash" unless data.is_a?(Hash)
@@ -122,6 +130,17 @@ module Simplyq
         Simplyq::Model::List.new(
           Simplyq::Model::Event, data,
           api_method: :retrieve_attempted_events,
+          list_args: list_args,
+          filters: params, api: self
+        )
+      end
+
+      def decerialize_attempts_list(json_data, params: {}, list_args: [])
+        data = body_to_json(json_data)
+
+        Simplyq::Model::List.new(
+          Simplyq::Model::DeliveryAttempt, data,
+          api_method: :retrieve_delivery_attempts,
           list_args: list_args,
           filters: params, api: self
         )

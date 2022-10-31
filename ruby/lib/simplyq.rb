@@ -13,6 +13,7 @@ require "simplyq/models/list"
 require "simplyq/models/application"
 require "simplyq/models/endpoint"
 require "simplyq/models/event"
+require "simplyq/models/delivery_attempt"
 
 # APIs
 require "simplyq/api/application_api"

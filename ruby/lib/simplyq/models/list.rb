@@ -77,7 +77,7 @@ module Simplyq
         return nil unless has_more || !empty?
 
         query_params = filters.dup.tap { |h| h.delete(:ending_before) }
-        query_params[:start_after] = last.uid
+        query_params[:start_after] = last.send(data_type.identifier)
         api.send(api_method, *list_args, query_params)
       end
 
@@ -85,7 +85,7 @@ module Simplyq
         return nil if empty?
 
         query_params = filters.dup.tap { |h| h.delete(:start_after) }
-        query_params[:ending_before] = first.uid
+        query_params[:ending_before] = first.send(data_type.identifier)
         api.send(api_method, *list_args, query_params)
       end
 

@@ -34,6 +34,13 @@ module Simplyq
                               end
       end
 
+      # The model identifier attribute used in list operations
+      #
+      # @return [Symbol]
+      def self.identifier
+        :uid
+      end
+
       # Serializes the object from a hash
       #
       # @param hash [Hash] Hash with the object data
