@@ -146,4 +146,40 @@ RSpec.describe Simplyq::API::EventAPI do
       end
     end
   end
+
+  describe "#retrieve_endpoints" do
+    it "retrieves endpoints" do
+      stub_request(:get, %r{/v1/application/#{application_uid}/event/#{event_uid}/endpoint})
+        .to_return(http_fixture_for("GetEventEndpoints", status: 200))
+
+      endpoints = api.retrieve_endpoints(application_uid, event_uid)
+
+      expect(endpoints).to be_a(Simplyq::Model::List)
+      expect(endpoints.data).to be_a(Array)
+      expect(endpoints.size).to eq(1)
+      expect(endpoints.first).to be_a(Simplyq::Model::Endpoint)
+      expect(endpoints.first.uid).to eq("fixture-edp-1")
+    end
+
+    context "when using pagination" do
+      it "returns a list of endpoints" do
+        stub_request(:get, %r{/v1/application/#{application_uid}/event/#{event_uid}/endpoint})
+          .with(query: { "limit" => "1" })
+          .to_return(http_fixture_for("GetEventEndpoints", status: 200))
+
+        stub_request(:get, %r{/v1/application/#{application_uid}/event/#{event_uid}/endpoint})
+          .with(query: { "start_after" => "fixture-edp-1", "limit" => "1" })
+          .to_return(http_fixture_for("GetEventEndpoints", status: 200))
+
+        endpoints = api.retrieve_endpoints(application_uid, event_uid, limit: 1)
+        endpoints.has_more = true
+
+        endpoints = endpoints.next_page
+
+        expect(endpoints).to be_a(Simplyq::Model::List)
+        expect(endpoints.first).to be_a(Simplyq::Model::Endpoint)
+        expect(endpoints.first.uid).to eq("fixture-edp-1")
+      end
+    end
+  end
 end

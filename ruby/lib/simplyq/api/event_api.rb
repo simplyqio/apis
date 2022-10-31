@@ -11,6 +11,7 @@ module Simplyq
       API_PATH = "/v1/application/{app_id}/event"
       API_RETRIEVE_PATH = "/v1/application/{app_id}/event/{event_id}"
       API_DELIVERY_ATTEMPTS_PATH = "/v1/application/{app_id}/event/{event_id}/delivery_attempt"
+      API_ENDPOINTS_PATH = "/v1/application/{app_id}/event/{event_id}/endpoint"
 
       # Initializes a new API object.
       #
@@ -48,6 +49,13 @@ module Simplyq
         decerialize_delivery_attempts_list(data, params: params, list_args: [application_id, event_id])
       end
 
+      def retrieve_endpoints(application_id, event_id, params = {})
+        path = API_ENDPOINTS_PATH.gsub("{app_id}", application_id).gsub("{event_id}", event_id)
+
+        data, status, headers = client.call_api(:get, path, { query_params: params })
+        decerialize_endpoints_list(data, params: params, list_args: [application_id, event_id])
+      end
+
       private
 
       def build_model(data)
@@ -80,6 +88,17 @@ module Simplyq
         Simplyq::Model::List.new(
           Simplyq::Model::DeliveryAttempt, data,
           api_method: :retrieve_delivery_attempts,
+          list_args: list_args,
+          filters: params, api: self
+        )
+      end
+
+      def decerialize_endpoints_list(json_data, params: {}, list_args: [])
+        data = body_to_json(json_data)
+
+        Simplyq::Model::List.new(
+          Simplyq::Model::Endpoint, data,
+          api_method: :retrieve_endpoints,
           list_args: list_args,
           filters: params, api: self
         )
