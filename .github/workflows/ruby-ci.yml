@@ -40,6 +40,7 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         # bundler-cache: true
+    - run: bundle install
 
     - name: Run the default task
       run: bundle exec rake
