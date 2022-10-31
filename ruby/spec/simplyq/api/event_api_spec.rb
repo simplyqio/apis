@@ -182,4 +182,30 @@ RSpec.describe Simplyq::API::EventAPI do
       end
     end
   end
+
+  describe "#retry" do
+    it "retries an event" do
+      stub_request(:post, %r{/v1/application/#{application_uid}/endpoint/#{endpoint_uid}/event/#{event_uid}})
+        .to_return(http_fixture_for("PostEventRetry", status: 202))
+
+      result = api.retry(application_uid, endpoint_uid, event_uid)
+
+      expect(result).to be(true)
+    end
+  end
+
+  describe "#retrieve_delivery_attempt" do
+    it "retrieves a delivery attempt" do
+      delivery_attempt_id = "eda_2GtK307736Bqy1uZeyApkIhgxBV1ETMIO"
+
+      stub_request(:get,
+                   %r{/v1/application/#{application_uid}/event/#{event_uid}/delivery_attempt/#{delivery_attempt_id}/})
+        .to_return(http_fixture_for("GetDeliveryAttempt", status: 200))
+
+      attempt = api.retrieve_delivery_attempt(application_uid, event_uid, delivery_attempt_id)
+
+      expect(attempt).to be_a(Simplyq::Model::DeliveryAttempt)
+      expect(attempt.id).to eq(delivery_attempt_id)
+    end
+  end
 end

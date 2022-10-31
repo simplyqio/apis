@@ -11,7 +11,9 @@ module Simplyq
       API_PATH = "/v1/application/{app_id}/event"
       API_RETRIEVE_PATH = "/v1/application/{app_id}/event/{event_id}"
       API_DELIVERY_ATTEMPTS_PATH = "/v1/application/{app_id}/event/{event_id}/delivery_attempt"
+      API_DELIVERY_ATTEMPT_PATH = "/v1/application/{app_id}/event/{event_id}/delivery_attempt/{delivery_attempt_id}/"
       API_ENDPOINTS_PATH = "/v1/application/{app_id}/event/{event_id}/endpoint"
+      API_RETRY_PATH = "/v1/application/{app_id}/endpoint/{endpoint_id}/event/{event_id}"
 
       # Initializes a new API object.
       #
@@ -56,6 +58,24 @@ module Simplyq
         decerialize_endpoints_list(data, params: params, list_args: [application_id, event_id])
       end
 
+      def retry(application_id, endpoint_id, event_id)
+        path = API_RETRY_PATH.gsub("{app_id}", application_id)
+                             .gsub("{endpoint_id}", endpoint_id)
+                             .gsub("{event_id}", event_id)
+
+        data, status, headers = client.call_api(:post, path)
+        status == 202
+      end
+
+      def retrieve_delivery_attempt(application_id, event_id, delivery_attempt_id)
+        path = API_DELIVERY_ATTEMPT_PATH.gsub("{app_id}", application_id)
+                                        .gsub("{event_id}", event_id)
+                                        .gsub("{delivery_attempt_id}", delivery_attempt_id)
+
+        data, status, headers = client.call_api(:get, path)
+        decerialize_delivery_attempt(data)
+      end
+
       private
 
       def build_model(data)
@@ -69,6 +89,12 @@ module Simplyq
         data = body_to_json(json_data)
 
         Simplyq::Model::Event.from_hash(data)
+      end
+
+      def decerialize_delivery_attempt(json_data)
+        data = body_to_json(json_data)
+
+        Simplyq::Model::DeliveryAttempt.from_hash(data)
       end
 
       def decerialize_list(json_data, params: {}, list_args: [])

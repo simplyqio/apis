@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+X-Ratelimit-Limit: 50
+X-Ratelimit-Remaining: 49
+Date: Mon, 31 Oct 2022 11:55:19 GMT
+Content-Length: 254
+
+{"id":"eda_2GtK307736Bqy1uZeyApkIhgxBV1ETMIO","event_id":"evte_2GtKBoeEo99TijMnNH8QLPLeWWX","endpoint_id":"fixture-edp-1","response":"","response_status_code":200,"status":"0","trigger_type":"0","retry_count":0,"attempted_at":"2022-10-31T07:45:36+00:00"}
