@@ -5,9 +5,9 @@ source "https://rubygems.org"
 gemspec
 
 group :development do
-  gem "rake", "~> 13.0"
+  gem "rake"
 
-  gem "rspec", "~> 3.11"
+  gem "rspec"
 
   gem "rubocop", "~> 1.36"
 
