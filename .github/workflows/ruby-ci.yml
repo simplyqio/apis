@@ -19,6 +19,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Ruby ${{ matrix.ruby }}
+    defaults:
+      run:
+        working-directory: ruby
     strategy:
       matrix:
         ruby:
