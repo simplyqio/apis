@@ -76,28 +76,26 @@ module Simplyq
         decerialize_delivery_attempt(data)
       end
 
-      private
-
-      def build_model(data)
+      private def build_model(data)
         return data if data.is_a?(Simplyq::Model::Event)
         raise ArgumentError, "Invalid data must be a Simplyq::Model::Event or Hash" unless data.is_a?(Hash)
 
         Simplyq::Model::Event.from_hash(data)
       end
 
-      def decerialize(json_data)
+      private def decerialize(json_data)
         data = body_to_json(json_data)
 
         Simplyq::Model::Event.from_hash(data)
       end
 
-      def decerialize_delivery_attempt(json_data)
+      private def decerialize_delivery_attempt(json_data)
         data = body_to_json(json_data)
 
         Simplyq::Model::DeliveryAttempt.from_hash(data)
       end
 
-      def decerialize_list(json_data, params: {}, list_args: [])
+      private def decerialize_list(json_data, params: {}, list_args: [])
         data = body_to_json(json_data)
 
         Simplyq::Model::List.new(
@@ -108,7 +106,7 @@ module Simplyq
         )
       end
 
-      def decerialize_delivery_attempts_list(json_data, params: {}, list_args: [])
+      private def decerialize_delivery_attempts_list(json_data, params: {}, list_args: [])
         data = body_to_json(json_data)
 
         Simplyq::Model::List.new(
@@ -119,7 +117,7 @@ module Simplyq
         )
       end
 
-      def decerialize_endpoints_list(json_data, params: {}, list_args: [])
+      private def decerialize_endpoints_list(json_data, params: {}, list_args: [])
         data = body_to_json(json_data)
 
         Simplyq::Model::List.new(
@@ -130,7 +128,7 @@ module Simplyq
         )
       end
 
-      def body_to_json(body)
+      private def body_to_json(body)
         return if body.nil?
 
         JSON.parse(body, symbolize_names: true)

@@ -83,7 +83,7 @@ module Simplyq
           invalid_properties.push('invalid value for "uid", the character length must be smaller than or equal to 255.')
         end
 
-        if !@uid.nil? && @uid.to_s.length < 1
+        if !@uid.nil? && @uid.to_s.empty?
           invalid_properties.push('invalid value for "uid", the character length must be great than or equal to 1.')
         end
 
@@ -100,7 +100,7 @@ module Simplyq
           invalid_properties.push('invalid value for "topics", number of items must be less than or equal to 5.')
         end
 
-        if !@topics.nil? && @topics.length < 1
+        if !@topics.nil? && @topics.empty?
           invalid_properties.push('invalid value for "topics", number of items must be greater than or equal to 1.')
         end
 

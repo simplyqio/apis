@@ -40,30 +40,26 @@ module Simplyq
 
     ERROR_MESSAGE_CONNECTION =
       "Unexpected error communicating when trying to connect to " \
-        "SimplyQ (%s). You may be seeing this message because your DNS is not " \
-        "working or you don't have an internet connection.  To check, try " \
-        "running `host api.simplyq.com` from the command line."
+      "SimplyQ (%s). You may be seeing this message because your DNS is not " \
+      "working or you don't have an internet connection.  To check, try " \
+      "running `host api.simplyq.com` from the command line."
     ERROR_MESSAGE_SSL =
       "Could not establish a secure connection to SimplyQ (%s), you " \
-        "may need to upgrade your OpenSSL version. To check, try running " \
-        "`openssl s_client -connect api.simplyq.com:443` from the command " \
-        "line."
+      "may need to upgrade your OpenSSL version. To check, try running " \
+      "`openssl s_client -connect api.simplyq.com:443` from the command " \
+      "line."
 
     ERROR_MESSAGE_TIMEOUT_SUFFIX =
       "Please check your internet connection and try again. " \
-        "If this problem persists, you should check SimplyQ's service " \
-        "status at https://simplyq.statuspage.io, or let us know at " \
-        "support@simplyq.io."
+      "If this problem persists, you should check SimplyQ's service " \
+      "status at https://simplyq.statuspage.io, or let us know at " \
+      "support@simplyq.io."
 
-    ERROR_MESSAGE_TIMEOUT_CONNECT = (
-      "Timed out connecting to SimplyQ (%s). " +
-      ERROR_MESSAGE_TIMEOUT_SUFFIX
-    ).freeze
+    ERROR_MESSAGE_TIMEOUT_CONNECT =
+      "Timed out connecting to SimplyQ (%s). #{ERROR_MESSAGE_TIMEOUT_SUFFIX}"
 
-    ERROR_MESSAGE_TIMEOUT_READ = (
-      "Timed out communicating with SimplyQ (%s). " +
-      ERROR_MESSAGE_TIMEOUT_SUFFIX
-    ).freeze
+    ERROR_MESSAGE_TIMEOUT_READ =
+      "Timed out communicating with SimplyQ (%s). #{ERROR_MESSAGE_TIMEOUT_SUFFIX}"
 
     NETWORK_ERROR_MESSAGES_MAP = {
       EOFError => ERROR_MESSAGE_CONNECTION,
@@ -99,7 +95,7 @@ module Simplyq
         config.logger.debug "HTTP response body ~BEGIN~\n#{response.body}\n~END~\n" if config.debugging
 
         unless response.success?
-          if response.status == 0
+          if response.status.zero?
             # Errors from libcurl will be made visible here
             raise ApiError.new(response.reason_phrase, http_status: 0)
           else
@@ -120,7 +116,7 @@ module Simplyq
 
       if errors.nil?
         message = "Unexpected error #{error.class.name} communicating " \
-          "with SimplyQ. Please let us know at support@simplyq.io."
+                  "with SimplyQ. Please let us know at support@simplyq.io."
       end
 
       message = message % config.base_url

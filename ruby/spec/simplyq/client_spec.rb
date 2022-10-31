@@ -84,7 +84,7 @@ RSpec.describe Simplyq::Client do
   end
 
   describe "#call_api" do
-    subject { described_class.new(api_key: api_key, base_url: base_url) }
+    subject(:api) { described_class.new(api_key: api_key, base_url: base_url) }
 
     let(:api_key) { "token" }
     let(:base_url) { "https://api.example.com" }
@@ -92,7 +92,7 @@ RSpec.describe Simplyq::Client do
     it "requests have a Content-Type header" do
       stub_request(:get, %r{/test})
 
-      subject.call_api(:get, "test", {})
+      api.call_api(:get, "test", {})
 
       expect(WebMock).to have_requested(:get, "#{base_url}/test")
         .with(headers: { "Content-Type" => "application/json" })
@@ -101,7 +101,7 @@ RSpec.describe Simplyq::Client do
     it "requests have a User-Agent header" do
       stub_request(:get, %r{/test})
 
-      subject.call_api(:get, "test", {})
+      api.call_api(:get, "test", {})
 
       expect(WebMock).to have_requested(:get, "#{base_url}/test")
         .with(headers: { "User-Agent" => Simplyq::Client::USER_AGENT })
@@ -112,7 +112,7 @@ RSpec.describe Simplyq::Client do
 
       query_params = { bar: "baz", fizz: %w[buzz bazz] }
 
-      subject.call_api(:get, "test", { query_params: query_params })
+      api.call_api(:get, "test", { query_params: query_params })
 
       expect(WebMock).to have_requested(:get, "#{base_url}/test")
         .with(query: query_params)
@@ -123,7 +123,7 @@ RSpec.describe Simplyq::Client do
 
       headers = { "X-Test" => "test" }
 
-      subject.call_api(:get, "test", { header_params: headers })
+      api.call_api(:get, "test", { header_params: headers })
 
       expect(WebMock).to have_requested(:get, "#{base_url}/test")
         .with(headers: headers)
@@ -134,7 +134,7 @@ RSpec.describe Simplyq::Client do
 
       body = { foo: "bar" }
 
-      subject.call_api(:post, "test", { body: body })
+      api.call_api(:post, "test", { body: body })
 
       expect(WebMock).to have_requested(:post, "#{base_url}/test")
         .with(body: body)
@@ -145,7 +145,7 @@ RSpec.describe Simplyq::Client do
         stub_request(:get, %r{/test})
           .to_return(status: 500, body: { error: "Internal Server Error", code: 500 }.to_json)
 
-        expect { subject.call_api(:get, "test", {}) }.to raise_error(Simplyq::APIError) do |error|
+        expect { api.call_api(:get, "test", {}) }.to raise_error(Simplyq::APIError) do |error|
           expect(error.message).to eq("Internal Server Error")
           expect(error.http_status).to eq(500)
         end
@@ -157,7 +157,7 @@ RSpec.describe Simplyq::Client do
                                                   error: "Internal Server Error", code: "internal_server_error"
                                                 }.to_json)
 
-        expect { subject.call_api(:get, "test", {}) }.to raise_error(Simplyq::APIError) do |error|
+        expect { api.call_api(:get, "test", {}) }.to raise_error(Simplyq::APIError) do |error|
           expect(error.message).to eq("Internal Server Error")
           expect(error.code).to eq("internal_server_error")
         end
@@ -167,7 +167,7 @@ RSpec.describe Simplyq::Client do
         stub_request(:get, %r{/test}).to_return(status: 500,
                                                 body: { error: "Internal Server Error", code: "internal_server_error", status: 500 }.to_json, headers: { "X-Test" => "test" })
 
-        expect { subject.call_api(:get, "test", {}) }.to raise_error(Simplyq::APIError) do |error|
+        expect { api.call_api(:get, "test", {}) }.to raise_error(Simplyq::APIError) do |error|
           expect(error.message).to eq("Internal Server Error")
           expect(error.code).to eq("internal_server_error")
           expect(error.http_status).to eq(500)
@@ -180,7 +180,7 @@ RSpec.describe Simplyq::Client do
 
         expected_message = Simplyq::Client::ERROR_MESSAGE_CONNECTION % base_url
         expected_message += "\n\n(Network error: execution expired)"
-        expect { subject.call_api(:get, "test", {}) }.to raise_error(Simplyq::APIConnectionError) do |error|
+        expect { api.call_api(:get, "test", {}) }.to raise_error(Simplyq::APIConnectionError) do |error|
           expect(error.message).to eq(expected_message)
         end
       end
@@ -190,7 +190,7 @@ RSpec.describe Simplyq::Client do
 
         expected_message = Simplyq::Client::ERROR_MESSAGE_SSL % base_url
         expected_message += "\n\n(Network error: Exception from WebMock)"
-        expect { subject.call_api(:get, "test", {}) }.to raise_error(Simplyq::APIConnectionError) do |error|
+        expect { api.call_api(:get, "test", {}) }.to raise_error(Simplyq::APIConnectionError) do |error|
           expect(error.message).to eq(expected_message)
         end
       end
@@ -200,7 +200,7 @@ RSpec.describe Simplyq::Client do
           .to_return(http_fixture_for("PostApplication", status: 422))
 
         expect do
-          subject.call_api(:post, "test", {})
+          api.call_api(:post, "test", {})
         end.to raise_error(Simplyq::InvalidRequestError) do |error|
           expect(error.message).to eq("Invalid request")
           expect(error.errors).to eq(
@@ -222,7 +222,7 @@ RSpec.describe Simplyq::Client do
       it "requests are made through the proxy" do
         proxy = "https://username:password@proxy.example.com:8080"
 
-        subject = described_class.new(api_key: api_key, base_url: base_url, proxy: proxy)
+        api = described_class.new(api_key: api_key, base_url: base_url, proxy: proxy)
         connection = subject.connection
 
         expect(connection.proxy).to eq(Faraday::ProxyOptions.from(proxy))

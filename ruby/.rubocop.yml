@@ -1,5 +1,11 @@
+inherit_from: .rubocop_todo.yml
+
+require: rubocop-rspec
+
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.7
+  NewCops: enable
+  SuggestExtensions: false
 
 Style/StringLiterals:
   Enabled: true
@@ -11,6 +17,12 @@ Style/StringLiteralsInInterpolation:
 
 Layout/LineLength:
   Max: 120
+  Exclude:
+    - 'spec/**/*'
+    - 'lib/simplyq/configuration.rb'
+    - 'lib/simplyq/models/delivery_attempt.rb'
+    - 'lib/simplyq/models/event.rb'
+    - 'lib/simplyq/models/event.rb'
 
 Style/AccessModifierDeclarations:
   EnforcedStyle: inline
@@ -20,3 +32,21 @@ Style/FrozenStringLiteralComment:
 
 Style/AccessorGrouping:
   EnforcedStyle: separated
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+Style/MultilineBlockChain:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false

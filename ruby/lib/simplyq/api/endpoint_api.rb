@@ -164,9 +164,10 @@ module Simplyq
                 "Invalid time must be a Time, DateTime, String"
         end
 
-        if time.is_a?(Time)
+        case time
+        when Time
           time.utc
-        elsif time.is_a?(DateTime)
+        when DateTime
           time.to_time.utc
         else
           Time.parse(time).utc

@@ -35,4 +35,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "net-http-persistent"
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
+  # We are looking to automate the release process so MFA is not supported yet
+  # spec.metadata["rubygems_mfa_required"] = "true"
 end

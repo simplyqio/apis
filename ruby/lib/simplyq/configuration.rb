@@ -91,7 +91,7 @@ module Simplyq
 
       @base_url = "https://api.simplyq.io"
       @middlewares = Hash.new { |h, k| h[k] = [] }
-      @logger = defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
+      @logger = defined?(Rails) ? Rails.logger : Logger.new($stdout)
 
       yield(self) if block_given?
     end
@@ -103,7 +103,7 @@ module Simplyq
 
     # Gets Basic Auth token string
     def basic_auth_token
-      "Basic " + ["#{username}:#{password}"].pack("m").delete("\r\n")
+      "Basic #{["#{username}:#{password}"].pack("m").delete("\r\n")}"
     end
 
     def auth_api_key
@@ -156,7 +156,7 @@ module Simplyq
     def set_faraday_middleware(operation, key, *args, &block)
       unless %i[request response use insert insert_before insert_after swap delete].include?(operation)
         raise ArgumentError, "Invalid faraday middleware operation #{operation}. Must be" \
-                            " :request, :response, :use, :insert, :insert_before, :insert_after, :swap or :delete."
+                             " :request, :response, :use, :insert, :insert_before, :insert_after, :swap or :delete."
       end
 
       @middlewares[operation] << [key, args, block]

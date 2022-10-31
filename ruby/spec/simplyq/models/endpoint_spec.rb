@@ -128,7 +128,7 @@ RSpec.describe Simplyq::Model::Endpoint do
         version: "v1"
       }
       model = described_class.new(data)
-      expect(model.valid?).to be_truthy
+      expect(model).to be_valid
     end
 
     it "returns false when invalid" do
@@ -142,7 +142,7 @@ RSpec.describe Simplyq::Model::Endpoint do
         secret: "secret"
       }
       model = described_class.new(data)
-      expect(model.valid?).to be_falsey
+      expect(model).not_to be_valid
     end
   end
 
@@ -252,7 +252,7 @@ RSpec.describe Simplyq::Model::Endpoint do
           sensitive: { "sensitive" => "value" }
         }
         model = described_class.new(data)
-        expect(model.has_sensitive?).to be_truthy
+        expect(model).to have_sensitive
       end
 
       it "returns false when no sensitive headers are present" do
@@ -261,7 +261,7 @@ RSpec.describe Simplyq::Model::Endpoint do
           sensitive: {}
         }
         model = described_class.new(data)
-        expect(model.has_sensitive?).to be_falsey
+        expect(model).not_to have_sensitive
       end
     end
 

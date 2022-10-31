@@ -2,9 +2,9 @@
 
 require "webmock/rspec"
 
-Dir[File.join(File.expand_path(__dir__), "support/**/*.rb")].each { |f| require f }
+Dir[File.join(File.expand_path(__dir__), "support/**/*.rb")].sort.each { |f| require f }
 
-$: << "#{File.expand_path("..", __dir__)}/lib"
+$LOAD_PATH << "#{File.expand_path("..", __dir__)}/lib"
 require "simplyq"
 
 RSpec.configure do |config|
