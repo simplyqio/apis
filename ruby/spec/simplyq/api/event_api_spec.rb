@@ -110,4 +110,40 @@ RSpec.describe Simplyq::API::EventAPI do
       end
     end
   end
+
+  describe "#retrieve_delivery_attempts" do
+    it "retrieves delivery attempts" do
+      stub_request(:get, %r{/v1/application/#{application_uid}/event/#{event_uid}/delivery_attempt})
+        .to_return(http_fixture_for("GetEventDeliveryAttempts", status: 200))
+
+      attempts = api.retrieve_delivery_attempts(application_uid, event_uid)
+
+      expect(attempts).to be_a(Simplyq::Model::List)
+      expect(attempts.data).to be_a(Array)
+      expect(attempts.size).to eq(1)
+      expect(attempts.first).to be_a(Simplyq::Model::DeliveryAttempt)
+      expect(attempts.first.id).to eq("eda_2GtK307736Bqy1uZeyApkIhgxBV1ETMIO")
+    end
+
+    context "when using pagination" do
+      it "returns a list of delivery attempts" do
+        stub_request(:get, %r{/v1/application/#{application_uid}/event/#{event_uid}/delivery_attempt})
+          .with(query: { "limit" => "1" })
+          .to_return(http_fixture_for("GetEventDeliveryAttempts", status: 200))
+
+        stub_request(:get, %r{/v1/application/#{application_uid}/event/#{event_uid}/delivery_attempt})
+          .with(query: { "start_after" => "eda_2GtK307736Bqy1uZeyApkIhgxBV1ETMIO", "limit" => "1" })
+          .to_return(http_fixture_for("GetEventDeliveryAttempts", status: 200))
+
+        attempts = api.retrieve_delivery_attempts(application_uid, event_uid, limit: 1)
+        attempts.has_more = true
+
+        attempts = attempts.next_page
+
+        expect(attempts).to be_a(Simplyq::Model::List)
+        expect(attempts.first).to be_a(Simplyq::Model::DeliveryAttempt)
+        expect(attempts.first.id).to eq("eda_2GtK307736Bqy1uZeyApkIhgxBV1ETMIO")
+      end
+    end
+  end
 end
