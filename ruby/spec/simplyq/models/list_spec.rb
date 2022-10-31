@@ -71,7 +71,7 @@ RSpec.describe Simplyq::Model::List do
       model = described_class.new(data_type, data, api_method: :list, api: api, filters: filters)
 
       expect(api).to receive(:list)
-        .with(ending_before: "uid-1", limit: 2)
+        .with({ ending_before: "uid-1", limit: 2 })
 
       model.prev_page
     end
