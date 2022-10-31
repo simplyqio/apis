@@ -29,9 +29,9 @@ jobs:
     strategy:
       matrix:
         ruby:
-          - '2.6'
           - '2.7'
           - '3.1.2'
+          - 'ruby-head'
 
     steps:
     - uses: actions/checkout@v3
@@ -39,7 +39,8 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-        # bundler-cache: true
+        bundler-cache: true
+        working-directory: ruby
     - run: bundle install
 
     - name: Run the default task
