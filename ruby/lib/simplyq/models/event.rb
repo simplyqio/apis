@@ -80,10 +80,6 @@ module Simplyq
           invalid_properties.push('invalid value for "retention_period", must be smaller than or equal to 90.')
         end
 
-        if !@retention_period.nil? && @retention_period < 5
-          invalid_properties.push('invalid value for "retention_period", must be greater than or equal to 5.')
-        end
-
         invalid_properties
       end
 
@@ -113,10 +109,20 @@ module Simplyq
           uid: uid,
           event_type: event_type,
           topics: topics,
-          payload: payload,
+          payload: _safe_parse_payload_to_hash(payload),
           retention_period: retention_period,
           created_at: created_at
         }
+      end
+
+      def _safe_parse_payload_to_hash(value)
+        return if value.nil?
+        return value if value.is_a?(Hash)
+        return value.to_h if value.respond_to?(:to_h)
+
+        JSON.parse(value)
+      rescue JSON::ParserError
+        value
       end
 
       def to_json(*args)

@@ -1,0 +1,8 @@
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+X-Ratelimit-Limit: 50
+X-Ratelimit-Remaining: 49
+Date: Thu, 03 Nov 2022 04:23:06 GMT
+Content-Length: 44
+
+{"error":"application not found","code":404}

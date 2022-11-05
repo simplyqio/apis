@@ -110,10 +110,7 @@ RSpec.describe Simplyq::API::ApplicationAPI do
         end.to raise_error(Simplyq::InvalidRequestError) do |error|
           expect(error.message).to eq("Invalid request")
           expect(error.errors).to eq(
-            [{
-              "error" => "Application UID already exists in your account",
-              "field" => "uid"
-            }]
+            [{ error: "Application UID already exists in your account", field: "uid" }]
           )
         end
       end

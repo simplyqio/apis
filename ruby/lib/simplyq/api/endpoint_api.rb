@@ -24,70 +24,70 @@ module Simplyq
       end
 
       def retrieve(application_id, endpoint_id)
-        path = API_PARAM_PATH.gsub("{app_id}", application_id).gsub("{endpoint_id}", endpoint_id)
+        path = API_PARAM_PATH.gsub("{app_id}", application_id.to_s).gsub("{endpoint_id}", endpoint_id.to_s)
 
         data, status, headers = client.call_api(:get, path)
         decerialize(data)
       end
 
       def list(application_id, params = {})
-        path = API_PATH.gsub("{app_id}", application_id)
+        path = API_PATH.gsub("{app_id}", application_id.to_s)
 
         data, status, headers = client.call_api(:get, path, { query_params: params })
         decerialize_list(data, params: params, list_args: [application_id])
       end
 
       def create(application_id, endpoint)
-        path = API_PATH.gsub("{app_id}", application_id)
+        path = API_PATH.gsub("{app_id}", application_id.to_s)
 
         data, status, headers = client.call_api(:post, path, { body: build_model(endpoint).to_h })
         decerialize(data)
       end
 
       def update(application_id, endpoint_id, endpoint)
-        path = API_PARAM_PATH.gsub("{app_id}", application_id).gsub("{endpoint_id}", endpoint_id)
+        path = API_PARAM_PATH.gsub("{app_id}", application_id.to_s).gsub("{endpoint_id}", endpoint_id.to_s)
 
         data, status, headers = client.call_api(:put, path, { body: build_model(endpoint).to_h })
         decerialize(data)
       end
 
       def delete(application_id, endpoint_id)
-        path = API_PARAM_PATH.gsub("{app_id}", application_id).gsub("{endpoint_id}", endpoint_id)
+        path = API_PARAM_PATH.gsub("{app_id}", application_id.to_s).gsub("{endpoint_id}", endpoint_id.to_s)
 
         data, status, headers = client.call_api(:delete, path)
         status == 204
       end
 
       def recover(application_id, endpoint_id, since:)
-        path = API_RECOVER_PATH.gsub("{app_id}", application_id).gsub("{endpoint_id}", endpoint_id)
+        path = API_RECOVER_PATH.gsub("{app_id}", application_id.to_s).gsub("{endpoint_id}", endpoint_id.to_s)
 
         data, status, headers = client.call_api(:post, path, { body: { since: _to_rfc3339(since) } })
         status == 202
       end
 
       def retrieve_secret(application_id, endpoint_id)
-        path = API_SECRET_PATH.gsub("{app_id}", application_id).gsub("{endpoint_id}", endpoint_id)
+        path = API_SECRET_PATH.gsub("{app_id}", application_id.to_s).gsub("{endpoint_id}", endpoint_id.to_s)
 
         data, status, headers = client.call_api(:get, path)
         decerialize_secret(data)
       end
 
       def rotate_secret(application_id, endpoint_id, secret: nil)
-        path = API_SECRET_PATH.gsub("{app_id}", application_id).gsub("{endpoint_id}", endpoint_id)
+        path = API_SECRET_PATH.gsub("{app_id}", application_id.to_s).gsub("{endpoint_id}", endpoint_id.to_s)
 
         data, status, headers = client.call_api(:post, path, { body: { key: secret } })
         status == 204
       end
 
       def retrieve_attempted_events(application_id, endpoint_id, params = {})
-        path = API_ATTEMPTED_EVENTS_PATH.gsub("{app_id}", application_id).gsub("{endpoint_id}", endpoint_id)
+        path = API_ATTEMPTED_EVENTS_PATH.gsub("{app_id}", application_id.to_s).gsub("{endpoint_id}", endpoint_id.to_s)
 
         data, status, headers = client.call_api(:get, path, { query_params: params })
         decerialize_events_list(data, params: params, list_args: [application_id, endpoint_id])
       end
 
       def retrieve_delivery_attempts(application_id, endpoint_id, params = {})
-        path = API_DELIVERY_ATTEMPTS_PATH.gsub("{app_id}", application_id).gsub("{endpoint_id}", endpoint_id)
+        path = API_DELIVERY_ATTEMPTS_PATH.gsub("{app_id}", application_id.to_s).gsub("{endpoint_id}", endpoint_id.to_s)
 
         data, status, headers = client.call_api(:get, path, { query_params: params })
         decerialize_attempts_list(data, params: params, list_args: [application_id, endpoint_id])

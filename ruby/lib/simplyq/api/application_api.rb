@@ -17,7 +17,7 @@ module Simplyq
       end
 
       def retrieve(application_id)
-        path = API_PARAM_PATH.gsub("{app_id}", application_id)
+        path = API_PARAM_PATH.gsub("{app_id}", application_id.to_s)
 
         data, status, headers = client.call_api(:get, path)
         decerialize(data)
@@ -34,14 +34,14 @@ module Simplyq
       end
 
       def update(application_id, application)
-        path = API_PARAM_PATH.gsub("{app_id}", application_id)
+        path = API_PARAM_PATH.gsub("{app_id}", application_id.to_s)
 
         data, status, headers = client.call_api(:put, path, { body: build_model(application).to_h })
         decerialize(data)
       end
 
       def delete(application_id)
-        path = API_PARAM_PATH.gsub("{app_id}", application_id)
+        path = API_PARAM_PATH.gsub("{app_id}", application_id.to_s)
 
         data, status, headers = client.call_api(:delete, path)
         status == 204

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "faraday"
+require "json"
 
 module Simplyq
   class Client
@@ -30,6 +31,18 @@ module Simplyq
         "Content-Type" => "application/json",
         "User-Agent" => USER_AGENT
       }
+    end
+
+    def applications
+      @applications ||= Simplyq::API::ApplicationAPI.new(self)
+    end
+
+    def endpoints
+      @endpoints ||= Simplyq::API::EndpointAPI.new(self)
+    end
+
+    def events
+      @events ||= Simplyq::API::EventAPI.new(self)
     end
 
     def check_api_key!
@@ -128,14 +141,14 @@ module Simplyq
     def get_http_error_data(response)
       body = safe_json_parse_body(response)
       if body.is_a?(Hash)
-        message = body["error"] || body["message"]
+        message = body[:error] || body[:message]
 
-        message = "Invalid request" if message.nil? && body["errors"]
+        message = "Invalid request" if message.nil? && body[:errors]
 
         return {
           message: message,
-          errors: body["errors"],
-          code: body["code"]
+          errors: body[:errors],
+          code: body[:code]
         }
       end
 
@@ -145,7 +158,7 @@ module Simplyq
     def safe_json_parse_body(response)
       return nil if response.body.nil?
 
-      JSON.parse(response.body)
+      JSON.parse(response.body, symbolize_names: true)
     rescue JSON::ParserError
       nil
     end

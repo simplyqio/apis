@@ -24,53 +24,53 @@ module Simplyq
       end
 
       def retrieve(application_id, event_id)
-        path = API_RETRIEVE_PATH.gsub("{app_id}", application_id).gsub("{event_id}", event_id)
+        path = API_RETRIEVE_PATH.gsub("{app_id}", application_id.to_s).gsub("{event_id}", event_id.to_s)
 
         data, status, headers = client.call_api(:get, path)
         decerialize(data)
       end
 
       def list(application_id, params = {})
-        path = API_PATH.gsub("{app_id}", application_id)
+        path = API_PATH.gsub("{app_id}", application_id.to_s)
 
         data, status, headers = client.call_api(:get, path, { query_params: params })
         decerialize_list(data, params: params, list_args: [application_id])
       end
 
       def create(application_id, event)
-        path = API_PATH.gsub("{app_id}", application_id)
+        path = API_PATH.gsub("{app_id}", application_id.to_s)
 
         data, status, headers = client.call_api(:post, path, { body: build_model(event).to_h })
         decerialize(data)
       end
 
       def retrieve_delivery_attempts(application_id, event_id, params = {})
-        path = API_DELIVERY_ATTEMPTS_PATH.gsub("{app_id}", application_id).gsub("{event_id}", event_id)
+        path = API_DELIVERY_ATTEMPTS_PATH.gsub("{app_id}", application_id.to_s).gsub("{event_id}", event_id.to_s)
 
         data, status, headers = client.call_api(:get, path, { query_params: params })
         decerialize_delivery_attempts_list(data, params: params, list_args: [application_id, event_id])
       end
 
       def retrieve_endpoints(application_id, event_id, params = {})
-        path = API_ENDPOINTS_PATH.gsub("{app_id}", application_id).gsub("{event_id}", event_id)
+        path = API_ENDPOINTS_PATH.gsub("{app_id}", application_id.to_s).gsub("{event_id}", event_id.to_s)
 
         data, status, headers = client.call_api(:get, path, { query_params: params })
         decerialize_endpoints_list(data, params: params, list_args: [application_id, event_id])
       end
 
       def retry(application_id, endpoint_id, event_id)
-        path = API_RETRY_PATH.gsub("{app_id}", application_id)
-                             .gsub("{endpoint_id}", endpoint_id)
-                             .gsub("{event_id}", event_id)
+        path = API_RETRY_PATH.gsub("{app_id}", application_id.to_s)
+                             .gsub("{endpoint_id}", endpoint_id.to_s)
+                             .gsub("{event_id}", event_id.to_s)
 
         data, status, headers = client.call_api(:post, path)
         status == 202
       end
 
       def retrieve_delivery_attempt(application_id, event_id, delivery_attempt_id)
-        path = API_DELIVERY_ATTEMPT_PATH.gsub("{app_id}", application_id)
-                                        .gsub("{event_id}", event_id)
-                                        .gsub("{delivery_attempt_id}", delivery_attempt_id)
+        path = API_DELIVERY_ATTEMPT_PATH.gsub("{app_id}", application_id.to_s)
+                                        .gsub("{event_id}", event_id.to_s)
+                                        .gsub("{delivery_attempt_id}", delivery_attempt_id.to_s)
 
         data, status, headers = client.call_api(:get, path)
         decerialize_delivery_attempt(data)

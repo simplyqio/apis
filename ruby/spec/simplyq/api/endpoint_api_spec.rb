@@ -101,8 +101,11 @@ RSpec.describe Simplyq::API::EndpointAPI do
           api.create(application_uid, { uid: "fixture-edp-1" })
         end.to raise_error(Simplyq::InvalidRequestError) do |error|
           expect(error.message).to eq("Invalid request")
-          expect(error.errors).to eq([{ "error" => "Endpoint UID already exists in the application",
-                                        "field" => "uid" }])
+          expect(error.errors).to eq(
+            [
+              { error: "Endpoint UID already exists in the application", field: "uid" }
+            ]
+          )
         end
       end
     end

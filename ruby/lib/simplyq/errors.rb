@@ -64,7 +64,7 @@ module Simplyq
     attr_accessor :errors
 
     def initialize(message, param, http_status: nil, http_body: nil,
-                   http_headers: nil, code: nil, error: nil, errors: nil)
+                   http_headers: nil, code: nil, error: nil, errors: [])
       super(message, http_status: http_status, http_body: http_body,
                      http_headers: http_headers,
                      code: code)

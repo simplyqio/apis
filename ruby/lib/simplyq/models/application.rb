@@ -17,7 +17,7 @@ module Simplyq
       attr_accessor :retry_strategy
 
       def initialize(attributes = {})
-        self.uid = attributes[:uid] if attributes.key?(:uid)
+        self.uid = attributes[:uid].to_s if attributes.key?(:uid)
 
         self.name = attributes[:name] if attributes.key?(:name)
 

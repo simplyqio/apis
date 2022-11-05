@@ -105,7 +105,18 @@ RSpec.describe Simplyq::API::EventAPI do
 
         expect { api.create(application_uid, data) }.to raise_error(Simplyq::InvalidRequestError) do |error|
           expect(error.message).to eq("Invalid request")
-          expect(error.errors).to eq([{ "error" => "Event UID already exists in the application", "field" => "uid" }])
+          expect(error.errors).to eq([{ error: "Event UID already exists in the application", field: "uid" }])
+        end
+      end
+    end
+
+    context "when application uid does not exist" do
+      it "raises an error" do
+        stub_request(:post, %r{/v1/application/#{application_uid}/event})
+          .to_return(http_fixture_for("PostEvent", status: 404))
+
+        expect { api.create(application_uid, data) }.to raise_error(Simplyq::InvalidRequestError) do |error|
+          expect(error.message).to eq("application not found")
         end
       end
     end
