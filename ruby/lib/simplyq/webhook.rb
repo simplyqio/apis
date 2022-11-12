@@ -12,21 +12,23 @@ module Simplyq
     # Verify signature of webhook request
     #
     # @param payload_body [String] raw payload body
-    # @param signature_header [Hash] request headers
+    # @param signatures [String] request signature header
+    # @param timestamp [String] request timestamp header
     # @param secret [String] your endpoint secret
     # @param tolerance [Integer] duration before signature expires
     #   (default: 300 seconds) replay attack protection
     # @raise [SignatureVerificationError] if signature verification fails
     #
     # @return [Boolean] true if signature verification succeeds
-    def self.verify_signature(payload_body, signature_header, secret, tolerance: DEFAULT_TOLERANCE)
-      Signature.verify_header(payload_body, signature_header, secret, tolerance: tolerance)
+    def self.verify_signature(payload_body, signatures:, timestamp:, secret:, tolerance: DEFAULT_TOLERANCE)
+      Signature.verify_header(payload_body, signatures, timestamp, secret, tolerance: tolerance)
     end
 
     # Decerialize and verify signature of payload into an InboundEvent
     #
     # @param payload_body [String] raw payload body
-    # @param signature_header [Hash] request headers
+    # @param signatures [String] request signature header
+    # @param timestamp [String] request timestamp header
     # @param secret [String] your endpoint secret
     # @param tolerance [Integer] duration before signature expires
     #   (default: 300 seconds) replay attack protection
@@ -34,8 +36,8 @@ module Simplyq
     # @raise [JSON::ParserError] if payload_body is not valid JSON
     #
     # @return [Model::InboundEvent]
-    def self.construct_event(payload_body, signature_header, secret, tolerance: DEFAULT_TOLERANCE)
-      Signature.verify_header(payload_body, signature_header, secret, tolerance: tolerance)
+    def self.construct_event(payload_body, signatures:, timestamp:, secret:, tolerance: DEFAULT_TOLERANCE)
+      Signature.verify_header(payload_body, signatures, timestamp, secret, tolerance: tolerance)
 
       Model::InboundEvent.from_hash(JSON.parse(payload_body, symbolize_names: true))
     end
@@ -50,11 +52,12 @@ module Simplyq
         Base64.strict_encode64(sig)
       end
 
-      def self.verify_header(payload, header, secret, tolerance: nil)
-        timestamp, signatures = extract_timestampt_and_sigs(header)
+      def self.verify_header(payload, signatures_header, timestamp_header, secret, tolerance: nil)
+        timestamp, signatures = parse_timestampt_and_sigs(signatures_header, timestamp_header)
 
         expected_sig = calculate_signature(timestamp, payload, secret)
         unless signatures.any? { |sig| secure_compare(sig, expected_sig) }
+          header = { TIMESTAMP_HEADER => timestamp_header, SIGNATURE_HEADER => signatures_header }
           raise Simplyq::SignatureVerificationError.new(
             "No signatures found matching the expected signature for payload",
             http_headers: header, http_body: payload
@@ -62,6 +65,7 @@ module Simplyq
         end
 
         if tolerance && timestamp < Time.now - tolerance
+          header = { TIMESTAMP_HEADER => timestamp_header, SIGNATURE_HEADER => signatures_header }
           raise SignatureVerificationError.new(
             "Timestamp outside the tolerance zone (#{timestamp.to_i})",
             http_headers: header, http_body: payload
@@ -71,21 +75,15 @@ module Simplyq
         true
       end
 
-      def self.extract_timestampt_and_sigs(header)
-        timestamp = header[TIMESTAMP_HEADER] || header[TIMESTAMP_HEADER.upcase] || header[TIMESTAMP_HEADER.to_sym]
-        raise Simplyq::SignatureVerificationError.new("No timestamp header", http_headers: header) if timestamp.nil?
+      def self.parse_timestampt_and_sigs(signatures_header, timestamp_header)
+        timestamp = Integer(timestamp_header)
 
-        timestamp = Integer(timestamp)
-
-        signature = header[SIGNATURE_HEADER] || header[SIGNATURE_HEADER.upcase] || header[SIGNATURE_HEADER.to_sym]
-        raise Simplyq::SignatureVerificationError.new("No signature header", http_headers: header) if signature.nil?
-
-        signatures = signature.split(",").map(&:strip)
+        signatures = signatures_header.split(",").map(&:strip)
         raise Simplyq::SignatureVerificationError.new("No signatures found", http_headers: header) if signatures.empty?
 
         [Time.at(timestamp), signatures]
       end
-      private_class_method :extract_timestampt_and_sigs
+      private_class_method :parse_timestampt_and_sigs
 
       # Constant time string comparison to prevent timing attacks
       # Code borrowed from ActiveSupport
