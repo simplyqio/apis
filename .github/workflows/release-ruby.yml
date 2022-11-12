@@ -28,10 +28,9 @@ jobs:
           fetch-depth: 0
 
       - name: Release Gem
-        uses: discourse/publish-rubygems-action@v2
+        uses: simplyqio/publish-rubygems-action@1.0.0
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
           WORKDIR: ruby
           RELEASE_COMMAND: rake release
-          GIT_EMAIL: ivan@simplyq.io
-          GIT_NAME: simplyq-dxtimer
