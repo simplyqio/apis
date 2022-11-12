@@ -31,3 +31,5 @@ jobs:
           RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
           WORKDIR: ruby
           RELEASE_COMMAND: rake release
+          GIT_EMAIL: ivan@simplyq.io
+          GIT_NAME: simplyq-dxtimer
