@@ -34,4 +34,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
           WORKDIR: ruby
-          RELEASE_COMMAND: rake release
+          RELEASE_COMMAND: gem build *.gemspec && gem push *.gem
