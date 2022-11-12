@@ -24,6 +24,8 @@ jobs:
           allowed-conclusions: success
 
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Release Gem
         uses: discourse/publish-rubygems-action@v2
