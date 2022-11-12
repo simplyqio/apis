@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+X-Ratelimit-Limit: 50
+X-Ratelimit-Remaining: 49
+Date: Mon, 31 Oct 2022 07:45:26 GMT
+Content-Length: 276
+
+{"data":[{"uid":"evte_2GtKBoeEo99TijMnNH8QLPLeWWX","event_type":"fixture.created","version":"latest","topics":["ruby-client"],"payload":{"type":"sample.event","data":{"shard":2,"client":"ruby"}},"retention_period":0,"created_at":"2022-10-31T07:45:07+00:00"}],"has_more":false}

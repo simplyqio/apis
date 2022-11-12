@@ -7,8 +7,6 @@ if [ -z "$language" ]; then
   exit 1
 fi
 
-# docker run --rm -it -v ${PWD}/${language}/openapitools.json:/local/openapitools.json -v ${PWD}/openapi.yml:/local/openapi.yml -v ${PWD}/dist:/local/out openapitools/openapi-generator-cli "$@"
-
 function run_cli() {
   docker run --rm -it -v ${PWD}/${language}/openapitools.json:/local/openapitools.json -v ${PWD}/openapi.yml:/local/openapi.yml -v ${PWD}/clients:/local/out openapitools/openapi-generator-cli "$@"
 }
@@ -24,12 +22,6 @@ case $language in
 "typescript-node")
   run_cli generate -i /local/openapi.yml -g typescript-node -o /local/out/typescript-node
   ;;
-"typescript-angular")
-  run_cli generate -i /local/openapi.yml -g typescript-angular -o /local/out/typescript-angular
-  ;;
-"typescript-axios")
-  run_cli generate -i /local/openapi.yml -g typescript-axios -o /local/out/typescript-axios
-  ;;
 "java")
   run_cli generate -i /local/openapi.yml -g java -o /local/out/java
   ;;
@@ -37,7 +29,7 @@ case $language in
   run_cli generate -i /local/openapi.yml -g python -o /local/out/python
   ;;
 "ruby")
-  run_cli generate -i /local/openapi.yml -g ruby -o /local/out/ruby
+  run_cli generate -i /local/openapi.yml -g ruby -o /local/out/ruby --additional-properties=library=faraday --additional-properties=moduleName=SimplyQ
   ;;
 "go")
   run_cli generate -i /local/openapi.yml -g go -o /local/out/go
@@ -50,18 +42,6 @@ case $language in
   ;;
 "csharp")
   run_cli generate -i /local/openapi.yml -g csharp -o /local/out/csharp
-  ;;
-"csharp-dotnet2")
-  run_cli generate -i /local/openapi.yml -g csharp-dotnet2 -o /local/out/csharp-dotnet2
-  ;;
-"csharp-dotnetcore")
-  run_cli generate -i /local/openapi.yml -g csharp-dotnetcore -o /local/out/csharp-dotnetcore
-  ;;
-"csharp-nancyfx")
-  run_cli generate -i /local/openapi.yml -g csharp-nancyfx -o /local/out/csharp-nancyfx
-  ;;
-"csharp-netcore")
-  run_cli generate -i /local/open
   ;;
 *)
   echo -n "unknown"

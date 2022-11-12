@@ -2,3 +2,6 @@ node_modules/
 .env
 *.zip
 bundle.yml
+tmp/
+.envrc
+clients/

@@ -1,0 +1,29 @@
+name: Release Ruby
+
+on:
+  push:
+    tags:
+      - v*.*.*
+jobs:
+  publish:
+    name: Release to RubyGems
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Wait for tests to succeed
+        uses: lewagon/wait-on-check-action@v1.1.2
+        timeout-minutes: 10
+        with:
+          ref: 'refs/heads/main'
+          running-workflow-name: 'Release to RubyGems'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+          allowed-conclusions: success
+
+      - uses: actions/checkout@v3
+
+      - name: Release Gem
+        uses: cadwallion/publish-rubygems-action@8f9e053
+        env:
+          RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
+          RELEASE_COMMAND: rake release

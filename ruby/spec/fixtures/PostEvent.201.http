@@ -1,0 +1,8 @@
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+X-Ratelimit-Limit: 50
+X-Ratelimit-Remaining: 49
+Date: Mon, 31 Oct 2022 05:23:33 GMT
+Content-Length: 221
+
+{"uid":"fixture-event-2","event_type":"fixture.created","version":"latest","topics":["a"],"payload":{"type":"sample.event","data":{"shard":2,"client":"ruby"}},"retention_period":0,"created_at":"2022-10-31T05:23:33+00:00"}

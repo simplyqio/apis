@@ -1,0 +1,46 @@
+name: Ruby CI
+
+on:
+  push:
+    branches:
+      - main
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#example-including-paths
+    paths:
+      - 'ruby/**'
+
+  pull_request:
+    paths:
+      - 'ruby/**'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }}
+    defaults:
+      run:
+        working-directory: ruby
+    strategy:
+      matrix:
+        ruby:
+          - '2.7'
+          - '3.1.2'
+          - 'ruby-head'
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+        working-directory: ruby
+
+    - name: Run the default task
+      run: bundle exec rake

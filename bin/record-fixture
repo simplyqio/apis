@@ -1,0 +1,195 @@
+#!/usr/bin/env ruby
+
+# rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize, Style/GlobalVars
+
+usage = <<~USAGE
+  Usage: record-fixture -o OPERATION_ID -p 'app_id:123 endpoint_id:456' -q 'limit:1' -d '{"data": "foo"}' -c
+
+  How it works:
+    This CLI tool relieas on the openapi.yml file to generate a curl command
+    that will be executed to generate a response file. The response file will
+    be saved in the tmp directory and will be named after the operation_id and
+    the status code of the response. If the `-c` flag is passed, the response
+    will be compied to the client library fixtures folder.
+
+  Options:
+USAGE
+
+require 'optparse'
+require 'ostruct'
+
+$options = OpenStruct.new
+$options.base_url = 'https://api.simplyq.io'
+$options.http_method = nil
+$options.operation_id = nil
+$options.skip_auth = false
+$options.path_params = {}
+$options.query_params = {}
+$options.request_body = nil
+$options.request_body_file = nil
+$options.list = false
+$options.sync_clients = false
+
+ARGV << '-h' if ARGV.empty?
+
+class Array # rubocop:disable Style/Documentation
+  def padding(i, value = nil) # rubocop:disable Naming/MethodParameterName
+    (i - length).times { self << value }
+    self
+  end
+end
+
+OptionParser.new do |opts| # rubocop:disable Metrics/BlockLength
+  opts.banner = usage
+  opts.on('-h', '--help', 'Prints this help') do
+    puts opts
+    exit
+  end
+  opts.on('-v', '--verbose', 'Run verbosely') do |v|
+    $options.verbose = v
+  end
+  opts.on('-s', '--openapi-spec PATH', 'Relative OpenAPI spec file') do |v|
+    $options.openapi_spec = v
+  end
+  opts.on('-l', '--list', 'List available operations') do |_v|
+    $options.list = true
+  end
+  opts.on('-b', '--base-url URL', 'Base URL') do |v|
+    $options.base_url = v
+  end
+  opts.on('-m', '--http-method METHOD', 'HTTP method') do |v|
+    $options.http_method = v
+  end
+  opts.on('-o', '--operation-id OPERATIAON', 'Operation ID') do |v|
+    $options.operation_id = v
+  end
+  opts.on('-k', '--skip-auth', 'Skip Authorization header') do |_v|
+    $options.skip_auth = true
+  end
+  opts.on('-p', '--path-params PARAMS', 'Path parameters') do |v|
+    $options.path_params = v.split(' ').map { |p| p.split(':') }.to_h
+  end
+  opts.on('-qPARAMS', '--query-params PARAMS', 'Query parameters') do |v|
+    $options.query_params = v.split(' ').map { |p| p.split(':').padding(2) }.to_h
+  end
+  opts.on('-d', '--request-body BODY', 'Request body') do |v|
+    $options.request_body = v
+  end
+  opts.on('-f', '--request-body-file PATH', 'Request body file') do |v|
+    $options.request_body_file = v
+  end
+  opts.on('-c', '--sync-clients', 'Sync clients') do |v|
+    $options.sync_clients = v
+  end
+end.parse!
+
+PROJECT_DIR = File.expand_path('..', __dir__)
+
+API_CLIENTS = {
+  ruby: File.join(PROJECT_DIR, 'ruby', 'spec', 'fixtures')
+}.freeze
+
+def load_openapi_spec(_options)
+  require 'openapi3_parser'
+  Openapi3Parser.load_file($options.openapi_spec || File.join(PROJECT_DIR, 'openapi.yml'))
+end
+
+HTTP_OPERATINS = %i[get post put delete].freeze
+def build_operation_index(openapi_spec)
+  keys = openapi_spec.paths.keys
+  keys.each_with_object({}) do |path, index|
+    HTTP_OPERATINS.each do |http_operation|
+      operation = openapi_spec.paths[path].send(http_operation)
+      next unless operation
+
+      index[operation.operation_id.to_s] = {
+        path: path,
+        http_operation: http_operation,
+        operation: operation
+      }
+    end
+  end
+end
+
+openapi_spec = load_openapi_spec($options)
+
+OPERATION_INDEX = build_operation_index(openapi_spec)
+
+if $options.list
+  puts(OPERATION_INDEX.map { |k, v| "#{k} #{v[:http_operation]} #{v[:path]}" })
+  exit 0
+end
+
+def expand_path(_options, path)
+  $options.path_params.each do |key, value|
+    unless path.include?("{#{key}}")
+      puts "Path parameter #{key} not found in path #{path}"
+      exit 1
+    end
+
+    path = path.gsub("{#{key}}", value)
+  end
+  path
+end
+
+def prepare_request_body(_options)
+  if $options.request_body_file
+    File.read($options.request_body_file)
+  else
+    $options.request_body
+  end
+end
+
+def sync_clients(response_file_path)
+  # This method copies the response files to the client fixtures
+  API_CLIENTS.each do |client, path|
+    puts "Copying response to #{client} client: #{response_file_path.split('/').last}"
+    run_command("cp #{response_file_path} #{path}")
+  end
+end
+
+def generate_response_file_path(_options)
+  File.join(PROJECT_DIR, 'tmp',
+            "#{$options.operation_id}.http")
+end
+
+def rename_file_based_on_status_code(response_file_path)
+  status_code = File.read(response_file_path).split(' ')[1]
+  new_file_path = response_file_path.gsub('.http', ".#{status_code}.http")
+  File.rename(response_file_path, new_file_path)
+  puts "Renamed response file to #{new_file_path.split('/').last}" if $options.verbose
+  new_file_path
+end
+
+def curl_command(options)
+  operation_id = $options.operation_id
+  http_method = $options.http_method
+  path = OPERATION_INDEX[operation_id][:path]
+  operation = OPERATION_INDEX[operation_id][:operation]
+  request_body = prepare_request_body(options)
+
+  http_method = OPERATION_INDEX[operation_id][:http_operation].to_s if http_method.nil?
+
+  headers = operation.request_body&.content&.keys&.map { |k| "-H 'Content-Type: #{k}'" } || []
+  headers << "-H 'Authorization: Bearer #{ENV['SIMPLYQ_API_KEY']}'" unless $options.skip_auth
+
+  params = $options.query_params.map { |k, v| "-G -d '#{k}=#{v}'" }
+  response_file = generate_response_file_path(options)
+
+  "curl -is -X #{http_method.upcase} " \
+  "#{headers.join(' ')} #{params.join(' ')} " \
+  "#{$options.base_url}#{expand_path(options, path)} " \
+  "#{request_body ? " -d '#{request_body}'" : ''} " \
+  "> #{response_file}"
+end
+
+def run_command(command)
+  puts command
+  system(command)
+end
+
+run_command(curl_command($options))
+new_file_path = rename_file_based_on_status_code(generate_response_file_path($options))
+sync_clients(new_file_path) if $options.sync_clients
+
+# rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize, Style/GlobalVars
