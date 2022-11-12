@@ -3,11 +3,14 @@ name: Release Ruby
 on:
   push:
     tags:
-      - v*.*.*
+      - '*.*.*'
 jobs:
   publish:
     name: Release to RubyGems
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ruby
 
     steps:
       - name: Wait for tests to succeed
@@ -21,9 +24,14 @@ jobs:
           allowed-conclusions: success
 
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
 
       - name: Release Gem
-        uses: cadwallion/publish-rubygems-action@8f9e053
+        uses: simplyqio/publish-rubygems-action@1.2.0
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUBYGEMS_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
-          RELEASE_COMMAND: rake release
+          WORKDIR: ruby
+          RELEASE_COMMAND: "gem build *.gemspec && gem push *.gem"
