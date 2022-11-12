@@ -96,6 +96,8 @@ RSpec/FilePath:
     - 'spec/simplyq/models/application_spec.rb'
     - 'spec/simplyq/models/endpoint_spec.rb'
     - 'spec/simplyq/models/list_spec.rb'
+    - 'spec/simplyq/models/event_spec.rb'
+    - 'spec/simplyq/models/inbound_event_spec.rb'
 
 # Offense count: 1
 RSpec/IdenticalEqualityAssertion:
