@@ -77,6 +77,10 @@ paths:
         - $ref: '#/components/parameters/after'
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: 'applications = client.applications.list'
     parameters: []
     post:
       summary: Create Application
@@ -110,6 +114,10 @@ paths:
         - Application
       requestBody:
         $ref: '#/components/requestBodies/Application'
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: 'application = client.applications.create({uid: "app-uid-1", name: "Application 1"})'
   '/v1/application/{app_id}':
     get:
       summary: Retrieve Application
@@ -142,6 +150,10 @@ paths:
       parameters: []
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: 'application = client.applications.retrieve("app-uid-1")'
     parameters:
       - $ref: '#/components/parameters/app_id'
     put:
@@ -173,6 +185,10 @@ paths:
         - Application
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: 'application = client.applications.update("app-uid-1", {name: "Application 1 (Updated)"})'
     delete:
       summary: Delete Application
       operationId: DeleteApplication
@@ -192,6 +208,10 @@ paths:
         - Application
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: 'boolean_response = client.applications.delete("app-uid-1")'
   '/v1/application/{app_id}/endpoint':
     get:
       summary: List Endpoints
@@ -251,6 +271,12 @@ paths:
         - Endpoint
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            endpoints = client.endpoints.list(app_uid)
     parameters:
       - $ref: '#/components/parameters/app_id'
     post:
@@ -293,6 +319,12 @@ paths:
         - Endpoint
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            endpoint = client.endpoints.create(app_uid, {uid: "endpoint-1", url: 'https://example.com/webhook/', version: 'v1'})
   '/v1/application/{app_id}/endpoint/{endpoint_id}':
     get:
       summary: Retrieve Endpoint
@@ -331,6 +363,13 @@ paths:
       parameters: []
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            endpoint_uid = 'endpoint-1'
+            endpoint = client.endpoints.retrieve(app_uid, endpoint_uid)
     parameters:
       - $ref: '#/components/parameters/app_id'
       - $ref: '#/components/parameters/endpoint_id'
@@ -361,6 +400,13 @@ paths:
         - Endpoint
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            endpoint_uid = 'endpoint-1'
+            endpoint = client.endpoints.update(app_uid, endpoint_uid, {version: 'v2'})
     delete:
       summary: Delete Endpoint
       operationId: DeleteEndpoint
@@ -380,6 +426,13 @@ paths:
         - Endpoint
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            endpoint_uid = 'endpoint-1'
+            endpoint = client.endpoints.delete(app_uid, endpoint_uid)
   '/v1/application/{app_id}/endpoint/{endpoint_id}/recover':
     parameters:
       - name: app_id
@@ -420,6 +473,13 @@ paths:
         - Endpoint
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            endpoint_uid = 'endpoint-1'
+            endpoints = client.endpoints.recover(app_uid, endpoint_uid, since: Time.now - 1.day)
   '/v1/application/{app_id}/endpoint/{endpoint_id}/secret':
     parameters:
       - name: app_id
@@ -458,6 +518,13 @@ paths:
         - Endpoint
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            endpoint_uid = 'endpoint-1'
+            boolean_reponse = client.endpoints.rotate_secret(app_uid, endpoint_uid)
     get:
       summary: Retrieve Endpoint Secret
       operationId: GetEndpointSecret
@@ -483,6 +550,13 @@ paths:
         - Endpoint
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            endpoint_uid = 'endpoint-1'
+            secret = client.endpoints.retrieve_secret(app_uid, endpoint_uid)
   '/v1/application/{app_id}/event':
     get:
       summary: List Events
@@ -540,6 +614,12 @@ paths:
         - Event
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            events = client.events.list(app_uid)
     parameters:
       - name: app_id
         in: path
@@ -590,6 +670,12 @@ paths:
         - Event
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            event = client.events.create(app_uid, {uid: "event-uid-1", event_type: "account.created", payload: {type: "account:created", trialing: true, referral: false, id: 1003})
   '/v1/application/{app_id}/event/{event_id}':
     get:
       summary: Retrieve Event
@@ -629,6 +715,13 @@ paths:
         - Event
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            event_uid = 'event-uid-1'
+            event = client.events.retrieve(app_uid, event_uid)
     parameters:
       - $ref: '#/components/parameters/app_id'
       - $ref: '#/components/parameters/event_id'
@@ -686,6 +779,13 @@ paths:
         - Event
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            endpoint_uid = 'endpoint-1'
+            events = client.endpoint.retrieve_attempted_events(app_uid, endpoint_uid)
     parameters:
       - name: app_id
         in: path
@@ -759,6 +859,13 @@ paths:
         - DeliveryAttempt
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            endpoint_uid = 'endpoint-1'
+            delivery_attempts = client.endpoints.retrieve_delivery_attempts(app_uid, endpoint_uid)
     parameters:
       - name: app_id
         in: path
@@ -828,6 +935,13 @@ paths:
         - DeliveryAttempt
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            event_uid = 'event-uid-1'
+            delivery_attempts = client.events.retrieve_delivery_attempts(app_uid, event_uid)
     parameters:
       - name: app_id
         in: path
@@ -883,6 +997,14 @@ paths:
         - DeliveryAttempt
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            event_uid = 'event-uid-1'
+            delivery_attempt_id = 'djSDIHVubd42dSAD'
+            delivery_attempt = client.events.retrieve_delivery_attempt(app_uid, event_uid, delivery_attempt_id)
     parameters:
       - $ref: '#/components/parameters/app_id'
       - $ref: '#/components/parameters/event_id'
@@ -941,6 +1063,13 @@ paths:
         - Endpoint
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            event_uid = 'event-uid-1'
+            endpoints = client.events.retrieve_endpoints(app_uid, event_uid)
     parameters:
       - name: app_id
         in: path
@@ -983,6 +1112,14 @@ paths:
       x-internal: true
       security:
         - HTTPBearer: []
+      x-codeSamples:
+        - label: "Ruby"
+          lang: "Ruby"
+          source: |
+            app_uid = 'app-uid-1'
+            endpoint_uid = 'endpoint-1'
+            event_uid = 'event-uid-1'
+            boolean_response = client.events.retry(app_uid, endpoint_uid, event_uid)
 components:
   schemas:
     RetryStrategy:
