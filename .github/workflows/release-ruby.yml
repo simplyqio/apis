@@ -3,7 +3,7 @@ name: Release Ruby
 on:
   push:
     tags:
-      - '*.*.*'
+      - 'ruby *.*.*'
 jobs:
   publish:
     name: Release to RubyGems
