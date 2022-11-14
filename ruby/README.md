@@ -1,22 +1,48 @@
-# Simplyq
+# SimplyQ Ruby Client
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/simplyq`. To experiment with that code, run `bin/console` for an interactive prompt.
+[![Ruby CI](https://github.com/simplyqio/apis/actions/workflows/ruby-ci.yml/badge.svg?branch=main)](https://github.com/simplyqio/apis/actions/workflows/ruby-ci.yml) [![Gem Version](https://badge.fury.io/rb/simplyq.svg)](https://badge.fury.io/rb/simplyq)
 
-TODO: Delete this and the text above, and describe your gem
+The Ruby client for the [SimplyQ API](https://development.simplyq.io)
+
+[SimplyQ](https://simplyq.io) distributes your events, with the Webhooks API you can send and manage your webhooks reliably and easily.
 
 ## Installation
 
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add simplyq
+    ```shell
+    bundle add simplyq
+    ```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install simplyq
+    ```shell
+    gem install simplyq
+    ```
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+# Load the gem
+require 'simplyq'
+
+# Setup the client
+client = Simplyq::Client.new({
+  # Configure Bearer authorization (bmp_2dNkUE1XXXXXXXXXXXXXXXXXXXXXXXXXXXXX): HTTPBearer
+  api_key: ENV.fetch("SIMPLYQ_API_KEY")
+})
+
+app = {
+    uid: 'example-app-1',
+    name: 'Example application #1'
+}
+
+# Create an application
+app = client.applications.create(app)
+```
+
+You can find more examples in the [examples](examples) directory. And also our API reference site which has examples of the ruby client https://developer.simplyq.io.
+
 
 ## Development
 
@@ -26,7 +52,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/simplyq. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/simplyq/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/simplyqio/apis, please first open an issue before opening a PR so we can discuss the changes. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/simplyqio/apis/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -34,4 +60,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Simplyq project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/simplyq/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the Simplyq project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/simplyqio/apis/blob/main/CODE_OF_CONDUCT.md).
