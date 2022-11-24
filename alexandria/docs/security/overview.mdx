@@ -17,7 +17,7 @@ When you create an endpoint, you either provide a secret or we generate one for 
 
 The signature is calculated using the [HMAC-SHA256](https://en.wikipedia.org/wiki/HMAC) algorithm, is base64 encoded and is sent as a header with the request `X-Simplyq-Signature`. In the case of rotating secrets, the signature is calculated using all the secrets that are currently valid, and appended as a list in the header.
 
-The content used for the hashing is the timestamp `X-Simplyq-Timestamp` and the body of the request, it does not include the headers. To see examples of how to verify the signature, see the [endpoint's secret section](/docs/concepts/endpoint#secret) page.
+The content used for the hashing is the timestamp `X-Simplyq-Timestamp` and the body of the request, it does not include the headers. To see examples of how to verify the signature, see the [endpoint's secret section](/concepts/endpoint#secret) page.
 
 ## Replay protection
 

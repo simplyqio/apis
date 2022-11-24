@@ -27,11 +27,11 @@ An application has several relations to other entities:
 
 ### Endpoint
 
-Many [endpoints](/docs/concepts/endpoint) can be created for an application.
+Many [endpoints](/concepts/endpoint) can be created for an application.
 
 ### Event
 
-[Events](/docs/concepts/event) are directly published to an application. Because an application also holds the endpoint information, it is possible to publish events to an application and have them automatically routed to the correct endpoint.
+[Events](/concepts/event) are directly published to an application. Because an application also holds the endpoint information, it is possible to publish events to an application and have them automatically routed to the correct endpoint.
 
 ---
 
@@ -47,7 +47,7 @@ The following attributes are configurable for a retry strategy:
 
   | Algorithm                                | Description                                                                                                                                                                                                                                       |
   | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `base_exponential_backoff_with_deadline` | This is the default retry strategy. It will retry the request with an exponential backoff until the deadline is reached. If the deadline is reached, the request will fail. You can view the retry schedule [here](/docs/retries/retry-schedule). |
+  | `base_exponential_backoff_with_deadline` | This is the default retry strategy. It will retry the request with an exponential backoff until the deadline is reached. If the deadline is reached, the request will fail. You can view the retry schedule [here](/retries/retry-schedule). |
   | `exponential_backoff`                    | The retry strategy will use an exponential backoff algorithm to determine the next retry interval.                                                                                                                                                |
   | `exponential_backoff_within_deadline`    | The retry strategy will use an exponential backoff algorithm to determine the next retry interval. The retry strategy will stop retrying when the deadline is reached.                                                                            |
   | `fixed_wait`                             | The retry strategy will use a fixed interval for all retries.                                                                                                                                                                                     |

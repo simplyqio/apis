@@ -140,9 +140,9 @@ curl -X POST "https://api.simplyq.io/v1/application/app-1/endpoint" \
 </Tabs>
 
 Notice how we did not provide a `uid` when creating the endpoint. This means that SimplyQ will generate a unique identifier for the endpoint. However, if you wish to provide your own identifier, you can do so by passing the `uid` attribute.
-In the example we also provided `event_types` attribute. This is an array of event types that the endpoint will listen to. If you do not provide this attribute, the endpoint will listen to all events. This also means that if an event is published to the application and it does not match any of the event types at the endpoint, the event will not be delivered to the endpoint. To learn more about event filtering and routing, check out the [routing guide](/docs/getting-started/routing).
+In the example we also provided `event_types` attribute. This is an array of event types that the endpoint will listen to. If you do not provide this attribute, the endpoint will listen to all events. This also means that if an event is published to the application and it does not match any of the event types at the endpoint, the event will not be delivered to the endpoint. To learn more about event filtering and routing, check out the [routing guide](/routing/overview).
 
-## Publish your first event
+## Publish your first event
 
 Now that we have an application and an endpoint, we can publish our first event. We will use the [event API](https://developer.simplyq.io/#tag/Event/operation/PostEvent) to publish an event to the application.
 
@@ -185,7 +185,6 @@ This event will be sent to the endpoint we created earlier. If you have changed 
 
 Now that you have published your first event, you can start building your own integrations. Below you can find some resources to help you get started.
 
-- [Routing](/docs/getting-started/routing)
-- [Environments](/docs/getting-started/environments)
-- [Idempotentcy](/docs/getting-started/idempotency)
-- [Security for your consumers](/docs/getting-started/security)
+- [Routing](/routing/overview)
+- [Environments](/environments/overview)
+- [Security for your consumers](/security/overview)

@@ -1,0 +1,38 @@
+---
+sidebar_position: 4
+title: Overview
+---
+
+There are currently two complimentary ways of routing events to endpoints. The first is filtering events based on the event type and the second is filtering events based on the topics.
+
+## Event types
+
+The filtering is applied on the [endpoints](/concepts/endpoint#filter-types), by setting the `filter_types` attribute. Filter types are matched using a case sensitive string comparison. The following example shows how to filter events by type:
+
+Take for example the following endpoint:
+```json
+{
+  "filter_types": ["event.type1", "event.type2"],
+  ...
+}
+```
+
+The endpoint will receive all events of type `event.type1` and `event.type2`. The endpoint will not receive any other event types.
+
+## Topics
+
+This method of filtering relies on the `topics` attribute of the [endpoints](/concepts/endpoint#topics) and [event](/concepts/event#topics). Topics are matched using a case sensitive string comparison. The following example shows how to filter events by topic:
+
+Take for example the following endpoint:
+```json
+{
+  "topics": ["topic1", "topic2"],
+  ...
+}
+```
+
+The endpoint will receive all events that have a topic of `topic1` or `topic2`. The endpoint will not receive any other events. This also means that if an event has no topics it will not be received by the endpoint.
+
+**Usage-case**
+
+The topics attribute is useful when you want to filter events based on the topic of the event. For example, if you want to receive all events that are related to a specific user, you can set the topic of the event to the user id. Then you can create an endpoint that filters on that topic. This way you can receive all events related to a specific user. Similarly in case you have regions in your system a user can create endpoints that filter on the region of the event.

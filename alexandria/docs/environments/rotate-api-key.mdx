@@ -1,0 +1,53 @@
+---
+sidebar_position: 4
+title: Rotate API Key
+---
+
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
+The environment API key allows to be rotated to a new value. This is useful if you suspect that the key has been compromised, or as part of your internal security policy.
+
+The key rotation allows for a seamless transition, with no downtime. The new key will be used for all new requests, while the old key will continue to be valid for a period of your choosing. After that, the old key will be automatically deleted.
+
+Valid period for the old key can be one of the following:
+* `now` - the old key will be deleted immediately
+* `1 hour` - the old key will be deleted after 1 hour
+* `24 hours` - the old key will be deleted after 1 day
+* `3 days` - the old key will be deleted after 3 days
+* `7 days` - the old key will be deleted after 7 days
+
+You can have up to three active keys at any given time. If you have more than three keys, you will need to delete one before you can rotate the current key.
+
+
+1. Navigate to [your API keys page](https://app.simplyq.io/apikeys).
+
+2. Click on the **Rotate** button next to the key or the `rotate your API key` text in the right sidebar.
+
+<ThemedImage
+  alt="api key rotate"
+  class="bordered margin-left--md"
+  sources={{
+    light: useBaseUrl('/img/rotate-api-key.png'),
+    dark: useBaseUrl('/img/rotate-api-key.png'),
+  }}
+  width="auto"
+  height="280px"
+/>
+
+<br/>
+<br/>
+
+3. Select your desired valid period for the old key and click the **Rotate API key** button.
+
+<ThemedImage
+  alt="api key rotate form"
+  class="bordered margin-left--md"
+  sources={{
+    light: useBaseUrl('/img/api-key-rotate-form.png'),
+    dark: useBaseUrl('/img/api-key-rotate-form.png'),
+  }}
+  width="auto"
+  height="280px"
+/>
+

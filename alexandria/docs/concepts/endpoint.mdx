@@ -30,7 +30,7 @@ The **uid** must be unique for each endpoint with relation to the application it
 
 ### Version
 
-The version attribute is also present on the [**Event**](/docs/event) object. If the endpoint version is `latest` which is represented as `null`, the endpoint will receive all events regardless of the event version. If the endpoint version is `1.0.0`, the endpoint will only receive events with a version of `1.0.0`. As described an endpoint can only process events from a single version.
+The version attribute is also present on the [**Event**](/concepts/event) object. If the endpoint version is `latest` which is represented as `null`, the endpoint will receive all events regardless of the event version. If the endpoint version is `1.0.0`, the endpoint will only receive events with a version of `1.0.0`. As described an endpoint can only process events from a single version.
 
 ### Filter types
 
@@ -101,15 +101,15 @@ const signature = crypto.createHmac('sha256', secret)
 </TabItem>
 </Tabs>
 
-To learn more aboout the signature verification process, see the [**Webhook**](/docs/webhook) documentation.
+To learn more aboout the signature verification process, see the [**security**](/security/overview) documentation.
 
 
 ## Entity relations
 
 ### Application
 
-An endpoint belongs to a single [application](/docs/concepts/application).
+An endpoint belongs to a single [application](/concepts/application).
 
 ### Event
 
-And [endpoint](/docs/concepts/endpoint) can receive events that match it's routing rules.
+And [endpoint](/concepts/endpoint) can receive events that match it's routing rules.
