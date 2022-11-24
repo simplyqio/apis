@@ -71,6 +71,14 @@ const config = {
             position: 'left',
             label: 'Docs',
           },
+          {
+            label: 'Website',
+            href: 'https://simplyq.io',
+          },
+          {
+            label: 'API Refernces',
+            href: 'https://simplyq.io',
+          },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/simplyq/apis',
