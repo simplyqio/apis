@@ -77,7 +77,7 @@ const config = {
           },
           {
             label: 'API Refernces',
-            href: 'https://simplyq.io',
+            href: 'https://developer.simplyq.io',
           },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
