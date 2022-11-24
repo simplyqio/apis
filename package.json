@@ -17,6 +17,6 @@
     "start": "redocly preview-docs --use-community-edition",
     "bundle": "redocly bundle --output bundle.yml",
     "bundle-json": "redocly bundle --output bundle.json --format json",
-    "build": "yarn bundle && redoc-cli build --output index.html bundle.yml"
+    "build": "yarn bundle && redoc-cli build --output build/index.html bundle.yml"
   }
 }

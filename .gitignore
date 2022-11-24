@@ -5,3 +5,4 @@ bundle.yml
 tmp/
 .envrc
 clients/
+build/
