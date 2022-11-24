@@ -2,4 +2,4 @@
 # all contexts unless otherwise overridden by more specific contexts.
 [build]
 # Ignore eval command. Exit with 1 to build.
-ignore = "bin/ignore-api-reference-build $CACHED_COMMIT_REF $COMMIT_REF"
+ignore = "bin/ignore-api-reference-build $HEAD $COMMIT_REF"
