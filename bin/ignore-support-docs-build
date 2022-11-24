@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# This script is used in the Netlify build settings to prevent the API reference from being built if the alexandria file has not changed.
+
+# Usage: ./bin/ignore-api-reference-build <commit SHA> <commit SHA>
+# Example: ./bin/ignore-api-reference-build 1234567890abcdef 1234567890abcdef
+
+# The script is called with the following arguments:
+# $1: The commit SHA of the last successful build
+# $2: The commit SHA of the current build
+
+if [ -z "$1" ] || [ -z "$2" ]; then
+  echo "Usage: ./bin/ignore-api-reference-build <commit SHA> <commit SHA>"
+  exit 1
+fi
+
+# Get the list of files that have changed between the two commit SHAs
+files=$(git diff --name-only $1 $2)
+
+# Check if the alexandria file is in the list of changed files
+if [[ $files == *"alexandria"* ]]; then
+  echo "alexandria has changed. Building API reference."
+  exit 1
+else
+  echo "alexandria has not changed. Skipping API reference build."
+  exit 0
+fi
