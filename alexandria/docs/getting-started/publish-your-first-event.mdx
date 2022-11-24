@@ -1,0 +1,191 @@
+---
+sidebar_position: 3
+title: Publish your first event
+---
+
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl'
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import StepsContainer from '@site/src/components/StepsContainer';
+
+
+This guide will walk you through the process of publishing your first event.
+
+## Key concepts
+
+Before we get started, let's go over some key concepts that will be used throughout this guide.
+
+### Application
+
+An application is a logical container for your endpoints and events. It is the top-level object that holds all of your events and delivery configuration. You can think of it as a logical aggregate such as Accounts, Users, etc. You would tipically create one application per account in your system.
+
+### Endpoint
+
+Endpoints are associated with an Application and hold the routing rules. Each application can have multiple endpoints and every event sent to the application will be routed to all endpoints - depending on the routing rules at each endpoint the event may not be attempted for a particular endpoint.
+
+### Event
+
+An event is an envelope that contains metadata and the event data - payload - you wish to send to endpoint(s).
+
+
+## Authentication
+
+Before you can publish events, you need to authenticate with the API. You can do this by retrieving your API key and using it in the `Authorization` header of your requests.
+
+<ThemedImage
+  alt="Docusaurus themed image"
+  class="bordered"
+  sources={{
+    light: useBaseUrl('/img/environment-api-keys.png'),
+    dark: useBaseUrl('/img/environment-api-keys.png'),
+  }}
+/>
+
+<StepsContainer>
+
+1. Go to [API Keys section](https://app.simplyq.io/apikeys) of the environment you want to publish events to.
+1. Click `Show key`
+2. When the key is revelead click `copy` or manually copy the key.
+
+</StepsContainer>
+
+Configure your chosen client to use the API key.
+
+<Tabs groupId="main">
+<TabItem value="ruby" label="Ruby">
+
+```ruby
+require 'simplyq'
+
+client = Simplyq.new({
+  api_key: ENV.fetch("SIMPLYQ_API_KEY")
+})
+```
+
+</TabItem>
+<TabItem value="curl" label="cURL">
+
+```bash
+curl -X POST "https://api.simplyq.io/v1/application/" \
+    -H  "Accept: application/json" \
+    -H  "Content-Type: application/json" \
+    -H  "Authorization: Bearer <API_KEY>"
+```
+
+</TabItem>
+</Tabs>
+
+
+## Create an application
+
+Since applications represent an account or a user in your system, you will need to create one before you can publish events. We suggest you create an application whenever a new user signs up or a new account is created. In this step we will create an application using the [application API](https://developer.simplyq.io/#tag/Application/operation/PostApplication).
+
+<Tabs groupId="main">
+<TabItem value="ruby" label="Ruby">
+
+```ruby
+application = client.applications.create({ uid: "app-1", name: "The Vegan Pizza Company" })
+```
+
+</TabItem>
+<TabItem value="curl" label="cURL">
+
+```bash
+curl -X POST "https://api.simplyq.io/v1/application" \
+    -H  "Accept: application/json" \
+    -H  "Content-Type: application/json" \
+    -H  "Authorization: Bearer <API_KEY>" \
+    -d  '{"uid":"app-1","name":"The Vegan Pizza Company"}'
+```
+
+</TabItem>
+</Tabs>
+
+
+Notice how in the examples provided we are passing the `uid` attribute. This is a unique identifier for the application and it is used to identify the application when publishing events. You can use any unique identifier you wish, such as an email address, a username, or a UUID. Alternatively you can choose to not provide a `uid` and SimplyQ will generate one for you.
+
+## Create a receiving endpoint
+
+Now that we have an application, we can create an endpoint to receive events. We will create an endpoint using the [endpoint API](https://developer.simplyq.io/#tag/Endpoint/operation/PostEndpoint).
+The endpoint will filter events based on the `event_type` attribute and will send them to the `https://example.com/webhooks/simplyq` URL. Consider changing the URL to your own webhook URL.
+
+
+<Tabs groupId="main">
+<TabItem value="ruby" label="Ruby">
+
+```ruby
+app_uid = application.uid # "app-1"
+endpoint = client.endpoints.create(app_uid, {
+  description: "Listens only to order events",
+  url: "https://example.com/webhooks/simplyq",
+  event_types: [
+   "order.created"
+  ]
+})
+```
+
+</TabItem>
+<TabItem value="curl" label="cURL">
+
+```bash
+curl -X POST "https://api.simplyq.io/v1/application/app-1/endpoint" \
+    -H  "Accept: application/json" \
+    -H  "Content-Type: application/json" \
+    -H  "Authorization: Bearer <API_KEY>" \
+    -d  '{"description":"Listens only to order events","url":"https://example.com/webhooks/simplyq","event_types":["order.created"]}'
+```
+
+</TabItem>
+</Tabs>
+
+Notice how we did not provide a `uid` when creating the endpoint. This means that SimplyQ will generate a unique identifier for the endpoint. However, if you wish to provide your own identifier, you can do so by passing the `uid` attribute.
+In the example we also provided `event_types` attribute. This is an array of event types that the endpoint will listen to. If you do not provide this attribute, the endpoint will listen to all events. This also means that if an event is published to the application and it does not match any of the event types at the endpoint, the event will not be delivered to the endpoint. To learn more about event filtering and routing, check out the [routing guide](/docs/getting-started/routing).
+
+## Publish your first event
+
+Now that we have an application and an endpoint, we can publish our first event. We will use the [event API](https://developer.simplyq.io/#tag/Event/operation/PostEvent) to publish an event to the application.
+
+<Tabs groupId="main">
+<TabItem value="ruby" label="Ruby">
+
+```ruby
+app_uid = application.uid # "app-1"
+event = client.events.create(app_uid, {
+  event_type: "order.created",
+  payload: {
+    type: "order.created",
+    order_id: "order-1",
+    customer_id: "customer-1",
+    items: [
+      { name: "Vegan Pizza", quantity: 1, price: 10.0 },
+    ]
+  }
+})
+```
+
+</TabItem>
+<TabItem value="curl" label="cURL">
+
+```bash
+curl -X POST "https://api.simplyq.io/v1/application/app-1/event" \
+    -H  "Accept: application/json" \
+    -H  "Content-Type: application/json" \
+    -H  "Authorization: Bearer <API_KEY>" \
+    -d  '{"event_type":"order.created","payload":{"type":"order.created","order_id":"order-1","customer_id":"customer-1","items":[{"name":"Vegan Pizza","quantity":1,"price":10.0}]}}'
+```
+
+</TabItem>
+</Tabs>
+
+This event will be sent to the endpoint we created earlier. If you have changed the endpoint url you should have received the event and you can see the `payload` in the request body.
+
+
+## Next steps
+
+Now that you have published your first event, you can start building your own integrations. Below you can find some resources to help you get started.
+
+- [Routing](/docs/getting-started/routing)
+- [Environments](/docs/getting-started/environments)
+- [Idempotentcy](/docs/getting-started/idempotency)
+- [Security for your consumers](/docs/getting-started/security)

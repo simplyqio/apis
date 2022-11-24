@@ -1,0 +1,42 @@
+---
+sidebar_position: 3
+title: Event
+---
+
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl'
+import CTAButton from '@site/src/components/CTAButton';
+
+An event is an envelope that contains metadata and the event data - payload - that is going to be delivered to endpoint(s).
+
+## Configuration
+
+The following attributes are configurable for an event:
+
+* `uid` - The unique identifier for the event. This is used to identify the event in the API. When not provided we will generate a random UID for you.
+* `event_type` - The event type defines the data contained in an event.
+* `version` - This is used to identify the version of the event type.
+* `topics` - The topics is a array of strings. Topics are used in event routing with endpoint(s).
+* `payload` - The payload is the data that is going to be delivered to the endpoint(s).
+* `retention_period` - The retention period defines how long the event is going to be stored in the database. The retention period is defined in days. The default retention period is the max allowed for your current plan.
+
+### UID
+
+The **uid** must be unique for each event with relation to the application it is published to.
+
+### Event type
+
+The **event type** is a string that defines the data contained in an event. It is used during event routing to determine which endpoint(s) should receive the event.
+
+### Version
+
+The **version** is a string that defines the version of the event type. It is used during event routing to determine which endpoint(s) should receive the event. If the version is not provided we will default to treating the blank version as `latest`.
+
+### Topics
+
+The **topics** is a array of strings. Topics are used in event routing with endpoint(s). The topics are used to determine which endpoint(s) should receive the event.
+
+### Payload
+
+The **payload** is the data that is going to be delivered to the endpoint(s). The payload can be any format but we will assume it to be JSON by default. In case you are using a custom format you can specify the content type in the header of the endpoint(s).
+

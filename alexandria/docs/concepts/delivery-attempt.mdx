@@ -1,0 +1,58 @@
+---
+sidebar_position: 4
+title: Delivery Attempt
+---
+
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
+The delivery attempt is a read-only audit record that is created when we attempt to delivery an event to an endpoint. The delivery attempt is created when the event is sent to the endpoint and is updated when the endpoint responds to the event. The delivery attempt is created with the status of "Pending" and is updated to "Success", "Failure", or "Cancelled" when the endpoint responds to the event.
+
+## Configuration
+
+There are no configurable attributes as the record is read-only and can only be updated by the system.
+
+## Attributes
+
+| Attribute            | Type     | Description                                             |
+| -------------------- | -------- | ------------------------------------------------------- |
+| id                   | string   | The unique identifier of the delivery attempt.          |
+| event_id             | string   | The unique identifier of the event.                     |
+| endpoint_id          | string   | The unique identifier of the endpoint.                  |
+| endpoint_url         | string   | The endpoint URL at the time of delivery.               |
+| status               | string   | The status of the delivery attempt.                     |
+| response             | string   | The HTTP response body returned by the endpoint.        |
+| response_status_code | integer  | The HTTP response code returned by the endpoint.        |
+| response_headers     | JSON     | The HTTP response headers returned by the endpoint.     |
+| attempted_at         | DateTime | The date and time the delivery attempt was made.        |
+| scheduled_at         | DateTime | The date and time the event delivery will be attempted. |
+
+
+### Endpoint URL
+
+This is the URL of the endpoint at the time of delivery. If the endpoint URL is updated after the event is sent, the endpoint URL will not be updated in the delivery attempt.
+
+### Status
+
+The status of the delivery attempt can be one of the following:
+
+| Status   | Enum | Description                                                                  |
+| -------- | ---- | ---------------------------------------------------------------------------- |
+| pending  | 2    | The delivery attempt is pending.                                             |
+| success  | 0    | The delivery attempt was successful.                                         |
+| failure  | 1    | The delivery attempt failed.                                                 |
+| canceled | 3    | The delivery attempt was cancelled. This can happen if the event is deleted. |
+
+
+## Entity relations
+
+A delivery attempt has several relations to other entities:
+
+### Endpoint
+
+A delivery attempt is always associated with an [endpoint](/docs/concepts/endpoint).
+
+### Event
+
+A delivery attempt is always associated with an [event](/docs/concepts/event).
+

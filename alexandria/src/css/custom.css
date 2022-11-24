@@ -1,0 +1,50 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #635bff;
+  --ifm-color-primary-dark: #373ca2;
+  --ifm-color-primary-darker: #30358f;
+  --ifm-color-primary-darkest: #15173E;
+  --ifm-color-primary-light: #928cff;
+  --ifm-color-primary-lighter: #c2bfff;
+  --ifm-color-primary-lightest: #dbd9ff;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #B35CAC;
+  --ifm-color-primary-dark: #8B4186;
+  --ifm-color-primary-darker: #6F346B;
+  --ifm-color-primary-darkest: #532750;
+  --ifm-color-primary-light: #B766B2;
+  --ifm-color-primary-lighter: #C482C0;
+  --ifm-color-primary-lightest: #D19ECE;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+img.bordered {
+  /* border: 5px solid #ccc; */
+  box-shadow: rgb(247 247 247) 0px 0px 1px 4px;
+  border-radius: 6px;
+}
+
+.theme-doc-sidebar-item-category.theme-doc-sidebar-item-category-level-1 {
+  font-weight: 700;
+}
+
+.theme-doc-sidebar-item-category.theme-doc-sidebar-item-category-level-1 .menu__list-item-collapsible {
+  background-color: unset !important;
+  background: unset !important;
+  cursor: default;
+}
+
+.theme-doc-sidebar-item-link.theme-doc-sidebar-item-link-level-2 {
+  font-weight: 500;
+}

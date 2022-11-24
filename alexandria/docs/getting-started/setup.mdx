@@ -1,0 +1,25 @@
+---
+sidebar_position: 2
+title: Setup
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+SimplyQ offers a set of [REST APIs](https://developer.simplyq.io) to integrate with your application, this section will guide you through the steps to quickly configure our clients.
+
+<Tabs>
+<TabItem value="ruby" label="Ruby">
+
+```ruby
+require 'simplyq'
+
+client = Simplyq.new({
+  api_key: ENV.fetch("SIMPLYQ_API_KEY")
+})
+
+application = client.applications.create({ uid: "app-1", name: "Application #1" })
+```
+
+</TabItem>
+</Tabs>

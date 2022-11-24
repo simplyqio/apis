@@ -1,0 +1,16 @@
+---
+sidebar_position: 1
+title: Retry Schedule
+---
+
+## Default retry schedule
+
+| Retry Count | Retry Delay | Cumulative Delay |
+| ----------- | ----------- | ---------------- |
+| 0           | 0           | 0                |
+| 1           | 30s         | 30s              |
+| 2           | 3 min       | 3 min 30s        |
+| 3           | 10 min      | 13 min 30s       |
+| 4           | 30 min      | 43 min 30s       |
+| 5           | 120 min     | 2h 43 min 30s    |
+| 6           | 480 min     | 10h 43 min 30s   |

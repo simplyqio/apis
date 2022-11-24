@@ -1,0 +1,26 @@
+---
+sidebar_position: 1
+title: Overview
+---
+
+There are several security practices that we apply to our infrastructure and services to ensure your data is safe and secure, and your customer can also be confident when processing events.
+
+## Encryption at rest
+
+All data is encrypted at rest using [AES-256](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) encryption. This means that even if someone were to gain access to our servers, they would not be able to read your data.
+
+## Signature verification
+
+Signature verification is a process that ensures that the data you are receiving has not been tampered with.
+
+When you create an endpoint, you either provide a secret or we generate one for you. This secret is used to sign the data that is sent to your endpoint. When the endpoint receives the data it can used the secret to verify that the data has not been tampered with.
+
+The signature is calculated using the [HMAC-SHA256](https://en.wikipedia.org/wiki/HMAC) algorithm, is base64 encoded and is sent as a header with the request `X-Simplyq-Signature`. In the case of rotating secrets, the signature is calculated using all the secrets that are currently valid, and appended as a list in the header.
+
+The content used for the hashing is the timestamp `X-Simplyq-Timestamp` and the body of the request, it does not include the headers. To see examples of how to verify the signature, see the [endpoint's secret section](/docs/concepts/endpoint#secret) page.
+
+## Replay protection
+
+Replay protection helps in ensuring that a webhook is only processed once. This prevents malicious actors from replaying a webhook to your server multiple times.
+
+This is done by including the timestamp of when the event delivery was attempted in the `X-Simplyq-Timestamp` header. All our client libraries will automatically verify this header and throw an error if the timestamp is older than the tolerance threshold provided (default is 5 minutes).

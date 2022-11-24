@@ -1,0 +1,115 @@
+---
+sidebar_position: 2
+title: Endpoint
+---
+
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl'
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Endpoints are associated with an Application and hold the routing rules and destination URL where events will be sent. Each application can have multiple endpoints, and each event published to the application will be evaluated against all endpoints to determine which endpoints should receive the event.
+
+## Configuration
+
+The following attributes are configurable for an endpoint:
+
+* `uid` - The unique identifier for the endpoint. This is used to identify the endpoint in the API. When not provided we will generate a random UID for you.
+* `url` (Required) - The URL where the event will be sent.
+* `version` - The event versions that this endpoint will accept. If not provided, the endpoint will default to `latest`.
+* `filter_types` - The event types that this endpoint will accept. If not provided, the endpoint will accept all event types.
+* `topics` - The topics that this endpoint will accept. If not provided, the endpoint will accept all topics.
+* `active` - Whether or not the endpoint is active. If not provided, the endpoint will default to `true`.
+* `rate_limit` - The rate limit for the endpoint. If not provided, the endpoint will default to unlimited.
+* `headers` - The headers that will be sent with the event.
+* `secret` - The secret used when signing the event payload. If not provided, we will generate a random secret for you.
+
+### UID
+
+The **uid** must be unique for each endpoint with relation to the application it is created at.
+
+### Version
+
+The version attribute is also present on the [**Event**](/docs/event) object. If the endpoint version is `latest` which is represented as `null`, the endpoint will receive all events regardless of the event version. If the endpoint version is `1.0.0`, the endpoint will only receive events with a version of `1.0.0`. As described an endpoint can only process events from a single version.
+
+### Filter types
+
+The filter types attribute is an array of strings. If no filter types are provided then the endpoint will not filter events based on their event type. Filter types are matched using a case sensitive string comparison. If the event type is `user.created` and the filter types are `user.created` and `user.updated`, the endpoint will receive the event. If the event type is `user.created` and the filter types are `user.updated` and `user.deleted`, the endpoint will not receive the event.
+
+### Topics
+
+The topics attribute is an array of strings. If no topics are provided then the endpoint will not filter events based on their topic. Topics are matched using a case sensitive string comparison. If the event topic is `US` and the topics are `US` and `UK`, the endpoint will receive the event. If the event topic is `US` and the topics are `VN` and `EU`, the endpoint will not receive the event.
+
+### Rate limit
+
+The rate limit attribute is an integer. If no rate limit is provided then the endpoint will not have a rate limit. The rate limit is the number of events that can be sent to the endpoint per second. If the rate limit is `10`, the endpoint will receive a maximum of 10 events per second. If the rate limit is `10` and the endpoint receives 15 events in a second, the endpoint will receive 10 events and the remaining 5 events will be queued up for the following interval.
+
+### Headers
+
+Headers are key value pairs that will be sent with the event, when delivering to the endpoint's URL. The headers attribute is an object that allows for sensitive and public headers to be configured.
+
+The following attributes are configurable for headers:
+
+```json
+{
+  "headers": {
+    "Content-Type": "application/acme+json",
+  },
+  "sensitive": {
+    "x-super-secret": "s3cr3t"
+  }
+}
+```
+
+:::note
+
+Sensitive headers are encrypted at rest and will not be read back from the API or UI. You would only see a `{"sensitive": true}` value when reading the endpoint to indicate that secret headers are present.
+
+:::
+
+### Secret
+
+The secret attribute is a string. If no secret is provided we will generate a secret. The secret is used to sign the event payload when delivering to the endpoint's URL.
+
+The secret is sent as a header `X-Simplyq-Signature` with the event. The signature is generated using the HMAC SHA256 algorithm. The signature is generated using the following formula:
+
+<Tabs groupId="main">
+<TabItem value="ruby" label="Ruby">
+
+```ruby
+require 'simplyq'
+
+valid = Simplyq::Webhook.verify_signature(
+      request.body.read,
+      signatures: request_headers["x_simplyq_signature"],
+      timestamp: request_headers["x_simplyq_timestamp"],
+      secret: ENV.fetch("SIMPLYQ_WEBHOOK_SECRET")
+    )
+```
+
+
+</TabItem>
+<TabItem value="node" label="NodeJS">
+
+```js
+timestamp = request.headers['X-Simplyq-Timestamp']
+const signature = crypto.createHmac('sha256', secret)
+  .update(timestamp + payload)
+  .digest('base64');
+```
+
+</TabItem>
+</Tabs>
+
+To learn more aboout the signature verification process, see the [**Webhook**](/docs/webhook) documentation.
+
+
+## Entity relations
+
+### Application
+
+An endpoint belongs to a single [application](/docs/concepts/application).
+
+### Event
+
+And [endpoint](/docs/concepts/endpoint) can receive events that match it's routing rules.

@@ -1,0 +1,59 @@
+---
+sidebar_position: 1
+title: Application
+---
+
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
+An application is a top-level logical container similar to what you find inside your app encapsulating and representing Accounts, Users, etc.
+
+## Configuration
+
+The following attributes are configurable for an application:
+
+* `uid` - The unique identifier for the application. This is used to identify the application in the API. When not provided we will generate a random UID for you.
+* `name` (Required) - The name of the application
+* `rate_limit` - The rate limit applied to all associated endpoints. If you want to apply a rate limit to a specific endpoint, you can do so by configuring the endpoint.
+* `retry_strategy` - The [retry strategy](#retry-strategy) applied to all associated endpoints.
+
+### UID
+
+The **uid** must be unique for each application with relation to the environment it is created in.
+
+## Entity relations
+
+An application has several relations to other entities:
+
+### Endpoint
+
+Many [endpoints](/docs/concepts/endpoint) can be created for an application.
+
+### Event
+
+[Events](/docs/concepts/event) are directly published to an application. Because an application also holds the endpoint information, it is possible to publish events to an application and have them automatically routed to the correct endpoint.
+
+---
+
+## Retry Strategy
+
+The retry strategy is used to configure how we will handle failed requests to an endpoint.
+
+### Configuration
+
+The following attributes are configurable for a retry strategy:
+
+* `type` - The type retry algorithm. The following types are supported:
+
+  | Algorithm                                | Description                                                                                                                                                                                                                                       |
+  | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `base_exponential_backoff_with_deadline` | This is the default retry strategy. It will retry the request with an exponential backoff until the deadline is reached. If the deadline is reached, the request will fail. You can view the retry schedule [here](/docs/retries/retry-schedule). |
+  | `exponential_backoff`                    | The retry strategy will use an exponential backoff algorithm to determine the next retry interval.                                                                                                                                                |
+  | `exponential_backoff_within_deadline`    | The retry strategy will use an exponential backoff algorithm to determine the next retry interval. The retry strategy will stop retrying when the deadline is reached.                                                                            |
+  | `fixed_wait`                             | The retry strategy will use a fixed interval for all retries.                                                                                                                                                                                     |
+  | `fixed_wait_with_deadline`               | The retry strategy will use a fixed interval for all retries. The retry strategy will stop retrying when the deadline is reached.                                                                                                                 |
+
+
+* `max_retries` - The maximum number of retries to attempt. If not provided, we will default to 3.
+* `retry_delay` - The delay between retries.
+* `deadline` - The deadline for the retry strategy. Only applies with some algorithm.

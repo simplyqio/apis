@@ -1,0 +1,62 @@
+---
+sidebar_position: 1
+title: Introduction
+slug: /
+---
+
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl'
+import CTAButton from '@site/src/components/CTAButton';
+
+SimplyQ is a cloud-based event distribution platform that allows you to send events from your application to your customers or internally. It is a fully managed service that allows you to focus on building your application and not worry about the infrastructure.
+
+## Webhooks API
+
+The Webhooks API provides a way for you to send events. Manage receiving endpoints and configure routing and delivery rules.
+
+Developers can build robust integrations that make use of our fully managed webhooks infrastructure, so you never fail to deliver a webhook. You send your events to SimplyQ and we will deliver them to your configured endpoints. With routing rules you and your customers can choose which events are delivered to which endpoints. With even more advanced configuration options you can always know you are in control, and can focus on building features your users will love, instead of worrying about the infrastructure.
+
+### Why use SimplyQ and not building your own webhook infrastructure
+
+To build the webhook infrastructure yourself there are at least six main components that you need to build, operate and maintain:
+
+1. **The event ingestion service**
+
+  This service is responsible for receiving events from your application and storing them in a queue. This service is also responsible for validating the events and making sure they are in the correct form.
+
+1. **Storage**
+
+  Storage as with any data driven service plays a major role in how cost effective and easy to scale a system would be. The storage can be be a database, a message queue, etc.
+
+1. **Management API**
+
+  You would need to build an API that allows you and possibly your customers to manage and debug the data in the system. This API adds more reads to your storage layer and possibly other services, so you need to make sure that the API is performant and scalable.
+
+1. **Scheduler**
+
+  Often times you would want to schedule the delivery of events to your customers. This is where the scheduler comes in. The scheduler is responsible for reading the events from the queue and scheduling them for delivery. This is also where your fan-out and routing rules could be applied. THe service can also be responsible for balancing the load across multiple delivery endpoints, and ensuring all events get a chance to be delivered.
+
+1. **Delivery service**
+
+  This is the atyppical part of the system a lot of people talk about, as it needs to be optimised for outgoing requests and not incoming requests as we see in most typical services. This service is responsible for delivering the events to the configured endpoints. This service needs to be highly performant and scalable. Often times this would be a worker pool and it would provide feedback directly to the control plane to ensure the overall health of the system and your endpoints.
+
+1. **Monitoring and alerting**
+
+  This is a very important part of any system. You need to be able to monitor the health of the system and be able to alert when something goes wrong. This is also where you can monitor the health of your endpoints and alert your customers when something goes wrong.
+
+## Benefits of using SimplyQ Webhooks API
+
+### Never fail to send a webhook
+We know how important it is for your webhooks to finish their journeys and that every system is unique; set custom retry settings for each application, rate limiting and deal with unhealthy endpoints while giving them a chance to recover with logs at your fingertips to review.
+
+### Build webhook integration like Stripe in hours not weeks
+Add webhook features to your applications in minutes with our easy to use API. Focuse on building the ideal workflows for your customers to integrate with your application, and not worry about the infrastructure.
+
+### Evolve your webhook integration over time
+With our flexible API you can evolve your webhook integration over time. You can start with a simple webhook integration and then add more features as you go. The data and features are all there, for you to use when ready.
+
+<CTAButton href="https://app.simplyq.io">
+
+Sign up for free
+
+</CTAButton>
