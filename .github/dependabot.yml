@@ -11,3 +11,25 @@ updates:
     labels:
       - "ruby"
       - "dependencies"
+
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: daily
+    commit-message:
+      prefix: "JS"
+      include: "scope"
+    labels:
+      - "js"
+      - "dependencies"
+
+  - package-ecosystem: npm
+    directory: "/alexandria"
+    schedule:
+      interval: daily
+    commit-message:
+      prefix: "JS"
+      include: "scope"
+    labels:
+      - "js"
+      - "dependencies"
