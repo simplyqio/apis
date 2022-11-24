@@ -6,7 +6,7 @@ features.openapi:
   hideDownloadButton: true
   downloadDefinitionUrl: ''
   schemaExpansionLevel: 2
-  defaultSampleLanguage: 'curl'
+  defaultSampleLanguage: 'Ruby'
   generateCodeSamples:
     languages:
       - lang: curl

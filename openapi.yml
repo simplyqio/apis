@@ -663,7 +663,7 @@ paths:
           $ref: '#/components/responses/422-Validation-Error'
         '429':
           $ref: '#/components/responses/429-Too-Many-Requests'
-      description: Create a new endpoint resource.
+      description: Create a new event resource.
       requestBody:
         $ref: '#/components/requestBodies/Event'
       tags:
