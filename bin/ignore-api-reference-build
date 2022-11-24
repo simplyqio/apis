@@ -9,6 +9,8 @@
 # $1: The commit SHA of the last successful build
 # $2: The commit SHA of the current build
 
+set -e
+
 if [ -z "$1" ] || [ -z "$2" ]; then
   echo "Usage: ./bin/ignore-api-reference-build <commit SHA> <commit SHA>"
   exit 1
