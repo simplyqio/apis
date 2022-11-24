@@ -1558,10 +1558,10 @@ latest-version@^5.1.0:
   dependencies:
     package-json "^6.3.0"
 
-lodash.camelcase@^4.3.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
-  integrity sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==
+lodash-es@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
+  integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
 
 lodash.isequal@^4.5.0:
   version "4.5.0"
@@ -1737,13 +1737,13 @@ neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-netlify@^12.0.1:
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/netlify/-/netlify-12.0.1.tgz#c0ec08c1322cb18337cfc5db393c22dca73e94bc"
-  integrity sha512-nv16ofE2zHBbB8jQia8+opfdLmVYGrOaorhpInVz5Mkx3kVgJd7Q9c3+dVmSl4VA/4MHX6e4N7X4cH+9sj8Zhw==
+netlify@^13.0.2:
+  version "13.0.2"
+  resolved "https://registry.yarnpkg.com/netlify/-/netlify-13.0.2.tgz#6e0fe776bc780bffea964f6abd3507f15eac9040"
+  integrity sha512-n3Wap1GA2r5UQ4a5nZkcF/lEJXYbLcsqkXA5rYbeygWb7PCYFxb55OI/7EBvIHFTBjtF8OXBOCP3XomuHlqQWw==
   dependencies:
     "@netlify/open-api" "^2.12.0"
-    lodash.camelcase "^4.3.0"
+    lodash-es "^4.17.21"
     micro-api-client "^3.3.0"
     node-fetch "^3.0.0"
     omit.js "^2.0.2"
