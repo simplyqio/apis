@@ -9,7 +9,7 @@
   "private": true,
   "dependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.2",
-    "@redocly/cli": "^1.0.0-beta.114",
+    "@redocly/cli": "^1.0.0-beta.115",
     "netlify": "^13.0.2",
     "redoc-cli": "^0.13.19"
   },
