@@ -1754,10 +1754,10 @@ neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-netlify@^13.0.2:
-  version "13.0.2"
-  resolved "https://registry.yarnpkg.com/netlify/-/netlify-13.0.2.tgz#6e0fe776bc780bffea964f6abd3507f15eac9040"
-  integrity sha512-n3Wap1GA2r5UQ4a5nZkcF/lEJXYbLcsqkXA5rYbeygWb7PCYFxb55OI/7EBvIHFTBjtF8OXBOCP3XomuHlqQWw==
+netlify@^13.1.0:
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/netlify/-/netlify-13.1.0.tgz#18b962ab251a4a7d3bfd0e14c184ce646c32a73b"
+  integrity sha512-FkMXk0h7QuR1iR3MeSQFxadarHXWgXzYFoHvF3m7edsFUpJ2WdRH3xiOVEyJciQUGYwEAHycUyi8CkT/2aKzLA==
   dependencies:
     "@netlify/open-api" "^2.12.0"
     lodash-es "^4.17.21"
