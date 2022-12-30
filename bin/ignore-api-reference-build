@@ -23,9 +23,9 @@ x=package.json
 
 # Check if the openapi.yml file is in the list of changed files
 if [[ $files == *"openapi.yml"* ]] || [[ $files =~ (^|[[:space:]])$x($|[[:space:]]) ]]; then
-  echo "openapi.yml has changed. Building API reference."
+  echo "openapi.yml or package.json has changed. Building API reference."
   exit 1
 else
-  echo "openapi.yml has not changed. Skipping API reference build."
+  echo "openapi.yml or package.json has not changed. Skipping API reference build."
   exit 0
 fi
