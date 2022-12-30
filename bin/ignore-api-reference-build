@@ -21,6 +21,9 @@ files=$(git diff --name-only $1 $2)
 
 x=package.json
 
+# For debugging purposes
+echo "$1" "$2"
+
 # Check if the openapi.yml file is in the list of changed files
 if [[ $files == *"openapi.yml"* ]] || [[ $files == *"redocly"* ]] || [[ $files =~ (^|[[:space:]])$x($|[[:space:]]) ]]; then
   echo "openapi.yml or package.json has changed. Building API reference."
