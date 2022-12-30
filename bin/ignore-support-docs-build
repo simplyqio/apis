@@ -2,15 +2,15 @@
 
 # This script is used in the Netlify build settings to prevent the API reference from being built if the alexandria file has not changed.
 
-# Usage: ./bin/ignore-api-reference-build <commit SHA> <commit SHA>
-# Example: ./bin/ignore-api-reference-build 1234567890abcdef 1234567890abcdef
+# Usage: ./bin/ignore-support-docs-build <commit SHA> <commit SHA>
+# Example: ./bin/ignore-support-docs-build 1234567890abcdef 1234567890abcdef
 
 # The script is called with the following arguments:
 # $1: The commit SHA of the last successful build
 # $2: The commit SHA of the current build
 
 if [ -z "$1" ] || [ -z "$2" ]; then
-  echo "Usage: ./bin/ignore-api-reference-build <commit SHA> <commit SHA>"
+  echo "Usage: ./bin/ignore-support-docs-build <commit SHA> <commit SHA>"
   exit 1
 fi
 
