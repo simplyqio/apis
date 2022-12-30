@@ -17,6 +17,6 @@
     "start": "redoc-cli preview-docs --use-community-edition",
     "bundle": "redoc-cli bundle --output bundle.yml",
     "bundle-json": "redoc-cli bundle --output bundle.json --format json",
-    "build": "redocly build-docs openapi.yml --output build/index.html"
+    "build": "redocly build-docs openapi.yml --output build/index.html --template redocly/templates/index.tpl.html"
   }
 }
