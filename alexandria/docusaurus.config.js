@@ -55,6 +55,15 @@ const config = {
     ],
   ],
 
+  // <script defer data-domain="support.simplyq.io" src="https://plausible.io/js/script.js"></script>
+  scripts: [
+    {
+      src: 'https://plausible.io/js/script.js',
+      defer: true,
+      'data-domain': 'support.simplyq.io',
+    }
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
